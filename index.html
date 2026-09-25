@@ -1,0 +1,5189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mô Phỏng Trực Quan Thuật Toán & Cấu Trúc Dữ Liệu</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-primary: #38bdf8;
+      --accent-secondary: #818cf8;
+      --accent-success: #34d399;
+      --accent-warning: #fbbf24;
+      --accent-danger: #f87171;
+      --accent-purple: #c084fc;
+      --code-bg: #090d16;
+      --radius: 10px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #0f172a;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .clo-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .clo-tag {
+      font-size: 0.7rem;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-primary);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    /* NAVIGATION TABS */
+    nav.nav-tabs {
+      background-color: #141e33;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      overflow-x: auto;
+      padding: 0 16px;
+      scrollbar-width: thin;
+    }
+
+    .nav-tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-muted);
+      padding: 12px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-tab-btn.active {
+      color: var(--accent-primary);
+      border-bottom-color: var(--accent-primary);
+      background-color: rgba(56, 189, 248, 0.05);
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* TOOLBAR CONTROLS */
+    .toolbar {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+    }
+
+    .algo-select-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .algo-select-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    select, input, button {
+      background-color: #0f172a;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent-primary);
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    button:hover {
+      background-color: #1e293b;
+      border-color: var(--accent-primary);
+    }
+
+    button.btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border-color: #38bdf8;
+      color: white;
+    }
+
+    button.btn-primary:hover {
+      filter: brightness(1.15);
+    }
+
+    button.btn-danger {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      border-color: #f87171;
+      color: white;
+    }
+
+    /* PLAYBACK CONTROLS */
+    .playback-bar {
+      background: #141e33;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .playback-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .playback-btn {
+      width: 38px;
+      height: 36px;
+      font-size: 1rem;
+      padding: 0;
+    }
+
+    .play-toggle-btn {
+      min-width: 90px;
+    }
+
+    .step-slider-container {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-slider-container input[type=range] {
+      flex: 1;
+      accent-color: var(--accent-primary);
+      cursor: pointer;
+    }
+
+    .step-counter {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      min-width: 100px;
+      text-align: right;
+    }
+
+    .speed-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .speed-control input[type=range] {
+      width: 90px;
+      accent-color: var(--accent-secondary);
+    }
+
+    /* WORKSPACE GRID */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 16px;
+      flex: 1;
+      min-height: 500px;
+    }
+
+    @media (max-width: 1100px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* VISUALIZATION CANVAS STAGE */
+    .stage-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .stage-header {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(15, 23, 42, 0.6);
+    }
+
+    .stage-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stage-canvas {
+      flex: 1;
+      min-height: 420px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: auto;
+      background: radial-gradient(circle at center, #1b263b 0%, #0f172a 100%);
+    }
+
+    /* STANDARD BARS */
+    .bars-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 10px;
+      height: 280px;
+      width: 100%;
+      padding: 20px 10px 40px 10px;
+      position: relative;
+    }
+
+    .bar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .bar {
+      width: 44px;
+      background: linear-gradient(180deg, #38bdf8, #0284c7);
+      border-radius: 6px 6px 2px 2px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 6px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #0f172a;
+      transition: height 0.25s ease, background 0.25s ease, transform 0.25s ease;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    }
+
+    .bar.comparing {
+      background: linear-gradient(180deg, #fbbf24, #d97706) !important;
+      color: #000 !important;
+      transform: translateY(-8px);
+      box-shadow: 0 8px 15px rgba(251, 191, 36, 0.4);
+    }
+
+    .bar.swapping {
+      background: linear-gradient(180deg, #f87171, #dc2626) !important;
+      color: #fff !important;
+      transform: scale(1.08) translateY(-10px);
+      box-shadow: 0 8px 15px rgba(248, 113, 113, 0.5);
+    }
+
+    .bar.sorted {
+      background: linear-gradient(180deg, #34d399, #059669) !important;
+      color: #042f2e !important;
+    }
+
+    .bar.pivot {
+      background: linear-gradient(180deg, #c084fc, #9333ea) !important;
+      color: #fff !important;
+    }
+
+    .bar-index {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .bar-pointer {
+      position: absolute;
+      bottom: -30px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .pointer-i { background: #38bdf8; color: #000; bottom: -28px; }
+    .pointer-j { background: #fbbf24; color: #000; bottom: -46px; }
+    .pointer-mid { background: #c084fc; color: #fff; bottom: -28px; }
+    .pointer-min { background: #f87171; color: #fff; bottom: -46px; }
+
+    /* =========================================================================
+       SPECIAL VISUALIZATIONS: MERGE SORT, HEAP SORT, QUICK SORT
+       ========================================================================= */
+    /* MERGE SORT SPLIT & MERGE RACK */
+    .merge-rack-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .merge-full-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .merge-full-chip {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #1e293b;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+    }
+
+    .merge-full-chip.active-range {
+      border: 2px solid var(--accent-primary);
+      color: #fff;
+      background: rgba(56, 189, 248, 0.2);
+    }
+
+    .merge-sub-rack {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .merge-sub-box {
+      background: #141e33;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      min-width: 200px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .merge-sub-box.left-box { border-color: #38bdf8; }
+    .merge-sub-box.right-box { border-color: #f59e0b; }
+
+    .merge-sub-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .merge-elements-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .merge-elem-card {
+      width: 48px;
+      height: 52px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.15rem;
+      background: #1e293b;
+      border: 2px solid var(--border-color);
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .merge-elem-card.active-ptr {
+      border-color: #fff;
+      transform: translateY(-6px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #000;
+    }
+
+    .merge-elem-card.active-ptr-r {
+      border-color: #fff;
+      transform: translateY(-6px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+      background: linear-gradient(135deg, #d97706, #fbbf24);
+      color: #000;
+    }
+
+    .merge-elem-card.taken {
+      opacity: 0.25;
+      background: #0f172a;
+      border-style: dashed;
+    }
+
+    .merge-vs-badge {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--accent-danger);
+      padding: 10px 14px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.15);
+      border: 2px dashed var(--accent-danger);
+    }
+
+    .merge-target-rack {
+      background: rgba(16, 185, 129, 0.08);
+      border: 2px dashed #10b981;
+      border-radius: 12px;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .merge-target-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-success);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* HEAP SORT DUAL TREE & ARRAY */
+    .heap-dual-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .heap-tree-area {
+      width: 100%;
+      height: 250px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .heap-array-partition {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      background: #141e33;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      flex-wrap: wrap;
+    }
+
+    .heap-cell {
+      width: 48px;
+      height: 52px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      border: 2px solid transparent;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .heap-cell.in-heap {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    .heap-cell.parent-node {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+      color: #000 !important;
+      transform: scale(1.08);
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+    }
+
+    .heap-cell.child-node {
+      background: linear-gradient(135deg, #c084fc, #9333ea) !important;
+      color: #fff !important;
+    }
+
+    .heap-cell.swapping-node {
+      background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+      color: #fff !important;
+      animation: pulse 0.5s infinite alternate;
+    }
+
+    .heap-cell.in-sorted {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    .heap-divider {
+      width: 3px;
+      height: 52px;
+      background: #f43f5e;
+      border-radius: 2px;
+      box-shadow: 0 0 8px #f43f5e;
+      margin: 0 4px;
+    }
+
+    /* QUICK SORT LOMUTO 3-ZONE */
+    .quick-special-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+      max-width: 950px;
+    }
+
+    .quick-pivot-card {
+      background: linear-gradient(135deg, #7e22ce, #a855f7);
+      padding: 10px 24px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    .quick-zones-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      background: #141e33;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .quick-zone-legends {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-wrap: wrap;
+    }
+
+    .quick-slots-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 14px 0 26px 0;
+    }
+
+    .quick-slot {
+      width: 52px;
+      height: 60px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.15rem;
+      position: relative;
+      transition: all 0.25s ease;
+      border: 2px solid transparent;
+    }
+
+    .quick-slot.zone-less {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    .quick-slot.zone-greater {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+
+    .quick-slot.zone-unvisited {
+      background: rgba(148, 163, 184, 0.1);
+      border-color: #475569;
+      color: #cbd5e1;
+    }
+
+    .quick-slot.zone-pivot {
+      background: linear-gradient(135deg, #9333ea, #c084fc);
+      border-color: #fff;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(192, 132, 252, 0.6);
+    }
+
+    .quick-slot.scanning {
+      border-color: #f43f5e;
+      transform: translateY(-8px);
+      box-shadow: 0 6px 14px rgba(244, 63, 94, 0.5);
+    }
+
+    .quick-slot.zone-sorted {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    .quick-pointer-tag {
+      position: absolute;
+      bottom: -22px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* LINKED LIST, STACK, QUEUE, TREE STYLES */
+    .linked-list-stage { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 20px; width: 100%; }
+    .ll-node { display: flex; border: 2px solid var(--accent-primary); border-radius: 8px; overflow: hidden; background: #0f172a; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); position: relative; }
+    .ll-node.active { border-color: var(--accent-warning); transform: scale(1.05); }
+    .ll-data { padding: 10px 14px; font-size: 1.1rem; font-weight: 800; color: #fff; }
+    .ll-next, .ll-prev { background: #1e293b; padding: 10px 8px; font-size: 0.75rem; color: var(--text-muted); border-left: 1px solid var(--border-color); }
+    .ll-prev { border-left: none; border-right: 1px solid var(--border-color); }
+    .ll-arrow { font-size: 1.4rem; color: var(--accent-primary); font-weight: bold; }
+    .ll-null { font-size: 0.85rem; font-weight: 700; color: var(--accent-danger); padding: 6px 10px; border: 1px dashed var(--accent-danger); border-radius: 6px; }
+    .node-label { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 0.72rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+
+    .stack-stage { display: flex; align-items: flex-end; gap: 50px; height: 320px; }
+    .stack-vessel { width: 140px; height: 280px; border: 3px solid var(--accent-primary); border-top: none; border-radius: 0 0 12px 12px; display: flex; flex-direction: column-reverse; padding: 8px; gap: 6px; background: rgba(15, 23, 42, 0.8); }
+    .stack-item { height: 38px; background: linear-gradient(135deg, #0284c7, #38bdf8); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: #0f172a; }
+    .stack-item.top-item { background: linear-gradient(135deg, #f59e0b, #fbbf24); border: 2px solid #fff; }
+
+    .queue-vessel { display: flex; align-items: center; gap: 8px; border-top: 3px solid var(--accent-secondary); border-bottom: 3px solid var(--accent-secondary); padding: 14px 20px; min-width: 320px; height: 80px; background: rgba(15, 23, 42, 0.8); }
+    .queue-item { width: 48px; height: 48px; background: linear-gradient(135deg, #6366f1, #a855f7); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 1.1rem; }
+
+    .tree-stage { width: 100%; height: 100%; min-height: 380px; position: relative; }
+    .tree-svg { width: 100%; height: 360px; }
+    .tree-node circle { fill: #0f172a; stroke: var(--accent-primary); stroke-width: 3; transition: all 0.3s ease; }
+    .tree-node.active circle { stroke: var(--accent-warning); fill: #78350f; }
+    .tree-node.success circle { stroke: var(--accent-success); fill: #064e3b; }
+    .tree-node.dimmed circle { stroke: #334155; fill: #090d16; opacity: 0.6; }
+    .tree-node text { fill: #fff; font-size: 14px; font-weight: 800; text-anchor: middle; dominant-baseline: central; }
+    .tree-link { stroke: var(--border-color); stroke-width: 2.5; stroke-linecap: round; }
+    .tree-badge { font-size: 10px; fill: var(--accent-warning); font-weight: 700; }
+
+    /* RIGHT SIDEBAR */
+    .inspector-card { display: flex; flex-direction: column; gap: 14px; }
+    .explanation-panel { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .explanation-text { font-size: 0.92rem; line-height: 1.5; color: var(--text-main); min-height: 60px; padding: 10px; background: #0f172a; border-radius: 6px; border-left: 4px solid var(--accent-primary); }
+    .variables-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 4px; }
+    .variables-table th, .variables-table td { padding: 6px 10px; border: 1px solid var(--border-color); text-align: left; }
+    .variables-table th { background: #0f172a; color: var(--text-muted); }
+    .variables-table td { background: rgba(15, 23, 42, 0.4); font-family: monospace; font-weight: 600; color: var(--accent-warning); }
+
+    .code-panel { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .code-content { background-color: var(--code-bg); border-radius: 6px; padding: 10px 0; font-family: Consolas, "Fira Code", monospace; font-size: 0.82rem; line-height: 1.55; overflow-x: auto; max-height: 420px; scrollbar-width: thin; }
+    .btn-copy-cpp { background: #1e293b; border: 1px solid var(--border-color); color: var(--accent-primary); font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+    .btn-copy-cpp:hover { background: var(--accent-primary); color: #0f172a; }
+    .code-line { padding: 1px 12px; display: flex; gap: 12px; white-space: pre; color: #94a3b8; }
+    .code-line .line-num { color: #475569; user-select: none; min-width: 24px; text-align: right; }
+    .code-line.active { background-color: rgba(56, 189, 248, 0.2); color: #fff; border-left: 3px solid var(--accent-primary); font-weight: 700; }
+
+    .theory-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 14px 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; font-size: 0.85rem; }
+    .theory-item { display: flex; align-items: center; gap: 8px; }
+    .badge-complexity { background: rgba(129, 140, 248, 0.15); border: 1px solid rgba(129, 140, 248, 0.4); color: #c7d2fe; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-weight: 700; }
+
+    .clo-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; width: 100%; }
+    .clo-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+    .clo-card-header { display: flex; justify-content: space-between; align-items: center; }
+    .clo-card-title { font-size: 1rem; font-weight: 700; color: var(--accent-primary); }
+    .clo-card-desc { font-size: 0.85rem; color: var(--text-main); line-height: 1.5; }
+    .clo-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .clo-pill { font-size: 0.72rem; background: #0f172a; border: 1px solid var(--border-color); padding: 4px 8px; border-radius: 4px; color: var(--text-muted); }
+
+    @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+  
+    /* LINKED LIST PHYSICS SANDBOX MINI-GAME */
+    .sandbox-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .sandbox-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      background: #141e33;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .sandbox-toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    #sandboxCanvas {
+      width: 100%;
+      height: 440px;
+      background: radial-gradient(circle at center, #131c31 0%, #090e1a 100%);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      cursor: default;
+      display: block;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+    }
+    .sandbox-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+    .hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">&lt;/&gt;</div>
+      <div>
+        <h1>CẤU TRÚC DỮ LIỆU & GIẢI THUẬT</h1>
+        <p>Mô phỏng từng Pass (Step-by-Step Visualization Engine) - Phục vụ CLO 1 đến CLO 5</p>
+      </div>
+    </div>
+    <div class="clo-tags">
+      <span class="clo-tag" title="Làm việc nhóm BTL">CLO 1</span>
+      <span class="clo-tag" title="Vận dụng tổ chức & lưu trữ dữ liệu">CLO 2</span>
+      <span class="clo-tag" title="Lựa chọn CTDL giải quyết bài toán">CLO 3</span>
+      <span class="clo-tag" title="Cài đặt giải thuật tìm kiếm, sắp xếp">CLO 4</span>
+      <span class="clo-tag" title="Cài đặt các thao tác trên CTDL">CLO 5</span>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs" id="navTabs">
+    <button class="nav-tab-btn active" data-tab="search">🔍 1. Tìm Kiếm</button>
+    <button class="nav-tab-btn" data-tab="sort">⚡ 2. Sắp Xếp (8 Thuật Toán)</button>
+    <button class="nav-tab-btn" data-tab="linkedlist">🔗 3. Danh Sách Liên Kết</button>
+    <button class="nav-tab-btn" data-tab="stackqueue">📚 4. Ngăn Xếp & Hàng Đợi (RPN)</button>
+    <button class="nav-tab-btn" data-tab="trees">🌳 5. Cây Nhị Phân & AVL</button>
+    <button class="nav-tab-btn" data-tab="hashtable">#️⃣ 6. Bảng Băm (Hash Table)</button>
+    <button class="nav-tab-btn" data-tab="clo">🎯 Chuẩn Đầu Ra (CLO 1-5)</button>
+  </nav>
+
+  <!-- MAIN WORKSPACE -->
+  <main>
+    <div class="toolbar" id="algoToolbar">
+      <div class="algo-select-group" id="algoSelectArea"></div>
+      <div class="algo-select-group" id="inputArea"></div>
+    </div>
+
+    <!-- PLAYBACK CONTROLLER -->
+    <div class="playback-bar" id="playbackBar">
+      <div class="playback-buttons">
+        <button class="playback-btn" id="btnFirst" title="Về bước đầu tiên">|&lt;</button>
+        <button class="playback-btn" id="btnPrev" title="Lùi 1 bước">&lt;</button>
+        <button class="btn-primary play-toggle-btn" id="btnPlay">▶ Tự chạy</button>
+        <button class="playback-btn" id="btnNext" title="Tiến 1 bước">&gt;</button>
+        <button class="playback-btn" id="btnLast" title="Đến bước cuối">&gt;|</button>
+        <button id="btnReset" title="Đặt lại mảng ban đầu">🔄 Reset</button>
+      </div>
+
+      <div class="step-slider-container">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Pass/Bước:</span>
+        <input type="range" id="stepSlider" min="0" max="0" value="0">
+        <div class="step-counter" id="stepCounter">Bước: 0 / 0</div>
+      </div>
+
+      <div class="speed-control">
+        <span>Tốc độ:</span>
+        <input type="range" id="speedSlider" min="100" max="2000" step="100" value="800">
+        <span id="speedVal" style="min-width:45px;">0.8s</span>
+      </div>
+    </div>
+
+    <!-- WORKSPACE CANVAS & INSPECTOR -->
+    <div class="workspace-grid" id="mainGrid">
+      <div class="stage-card">
+        <div class="stage-header">
+          <div class="stage-title" id="stageTitle">
+            <span>📊</span> <span id="stageTitleText">Mô Phỏng Trực Quan</span>
+          </div>
+          <div class="stage-legend" id="stageLegend"></div>
+        </div>
+
+        <div class="stage-canvas" id="stageCanvas"></div>
+      </div>
+
+      <div class="inspector-card">
+        <div class="explanation-panel">
+          <div class="panel-header">
+            <span>📝 Thuyết minh từng pass</span>
+            <span id="passBadge" style="background:#0284c7; color:#fff; font-size:0.7rem; padding:2px 6px; border-radius:4px;">Pass 0</span>
+          </div>
+          <div class="explanation-text" id="explanationText"></div>
+
+          <table class="variables-table" id="varTable">
+            <thead>
+              <tr>
+                <th>Biến</th>
+                <th>Giá trị hiện tại</th>
+              </tr>
+            </thead>
+            <tbody id="varTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="code-panel">
+          <div class="panel-header">
+            <span>💻 Mã nguồn C++ chuẩn</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.7rem; color:var(--text-muted);">Theo sát dòng thực thi</span>
+              <button id="btnCopyCpp" class="btn-copy-cpp" title="Sao chép toàn bộ mã nguồn C++">📋 Copy C++</button>
+            </div>
+          </div>
+          <div class="code-content" id="codeContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM THEORY CARD -->
+    <div class="theory-card" id="theoryCard">
+      <div class="theory-item">
+        <span style="color:var(--text-muted);">Thời gian tốt nhất (Best):</span>
+        <span class="badge-complexity" id="compBest">O(1)</span>
+      </div>
+      <div class="theory-item">
+        <span style="color:var(--text-muted);">Trung bình (Average):</span>
+        <span class="badge-complexity" id="compAvg">O(N)</span>
+      </div>
+      <div class="theory-item">
+        <span style="color:var(--text-muted);">Tệ nhất (Worst):</span>
+        <span class="badge-complexity" id="compWorst">O(N)</span>
+      </div>
+      <div class="theory-item">
+        <span style="color:var(--text-muted);">Bộ nhớ phụ (Space):</span>
+        <span class="badge-complexity" id="compSpace">O(1)</span>
+      </div>
+      <div class="theory-item">
+        <span style="color:var(--text-muted);">Tính ổn định (Stable):</span>
+        <span id="propStable" style="font-weight:700; color:var(--accent-success);">Có</span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const State = {
+      currentTab: 'search',
+      currentAlgo: 'linear_search',
+      data: [29, 10, 14, 37, 13, 8, 25, 18],
+      targetVal: 14,
+      steps: [],
+      currentStepIndex: 0,
+      isPlaying: false,
+      playTimer: null,
+      speed: 800
+    };
+
+    const DOM = {
+      navTabs: document.getElementById('navTabs'),
+      algoSelectArea: document.getElementById('algoSelectArea'),
+      inputArea: document.getElementById('inputArea'),
+      playbackBar: document.getElementById('playbackBar'),
+      btnFirst: document.getElementById('btnFirst'),
+      btnPrev: document.getElementById('btnPrev'),
+      btnPlay: document.getElementById('btnPlay'),
+      btnNext: document.getElementById('btnNext'),
+      btnLast: document.getElementById('btnLast'),
+      btnReset: document.getElementById('btnReset'),
+      stepSlider: document.getElementById('stepSlider'),
+      stepCounter: document.getElementById('stepCounter'),
+      speedSlider: document.getElementById('speedSlider'),
+      speedVal: document.getElementById('speedVal'),
+      stageCanvas: document.getElementById('stageCanvas'),
+      stageTitleText: document.getElementById('stageTitleText'),
+      stageLegend: document.getElementById('stageLegend'),
+      explanationText: document.getElementById('explanationText'),
+      passBadge: document.getElementById('passBadge'),
+      varTableBody: document.getElementById('varTableBody'),
+      codeContainer: document.getElementById('codeContainer'),
+      theoryCard: document.getElementById('theoryCard'),
+      mainGrid: document.getElementById('mainGrid'),
+      compBest: document.getElementById('compBest'),
+      compAvg: document.getElementById('compAvg'),
+      compWorst: document.getElementById('compWorst'),
+      compSpace: document.getElementById('compSpace'),
+      propStable: document.getElementById('propStable')
+    };
+
+    const AlgoMeta = {
+  "linear_search": {
+    "name": "Linear Search (Tìm kiếm tuyến tính)",
+    "category": "search",
+    "best": "O(1)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(1)",
+    "stable": "N/A",
+    "codeOffset": 4,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "// 1. Hàm tìm kiếm tuyến tính trên mảng",
+      "int linearSearch(int a[], int n, int x) {",
+      "    for (int i = 0; i < n; i++) {",
+      "        if (a[i] == x)",
+      "            return i; // Tìm thấy tại chỉ số i",
+      "    }",
+      "    return -1; // Duyệt hết mảng nhưng không tìm thấy",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {12, 35, 67, 89, 42, 55};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    int x = 89;",
+      "    cout << \"=== TÌM KIẾM TUYẾN TÍNH (LINEAR SEARCH) ===\\n\";",
+      "    int index = linearSearch(a, n, x);",
+      "    if (index != -1)",
+      "        cout << \"Tim thay \" << x << \" tai chi so: \" << index << endl;",
+      "    else",
+      "        cout << \"Khong tim thay \" << x << \" trong mang!\\n\";",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "binary_search": {
+    "name": "Binary Search (Tìm kiếm nhị phân)",
+    "category": "search",
+    "best": "O(1)",
+    "avg": "O(log N)",
+    "worst": "O(log N)",
+    "space": "O(1)",
+    "stable": "N/A",
+    "codeOffset": 5,
+    "code": [
+      "#include <iostream>",
+      "#include <algorithm>",
+      "using namespace std;",
+      "",
+      "// 1. Hàm tìm kiếm nhị phân (Mảng BẮT BUỘC phải sắp xếp tăng dần)",
+      "int binarySearch(int a[], int left, int right, int x) {",
+      "    while (left <= right) {",
+      "        int mid = left + (right - left) / 2;",
+      "        if (a[mid] == x)",
+      "            return mid; // Tìm thấy tại vị trí mid",
+      "        if (a[mid] < x)",
+      "            left = mid + 1; // Thu hẹp sang nửa phải",
+      "        else",
+      "            right = mid - 1; // Thu hẹp sang nửa trái",
+      "    }",
+      "    return -1; // Không tìm thấy trong đoạn [left, right]",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {11, 23, 34, 45, 56, 67, 78, 89};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    int x = 45;",
+      "    cout << \"=== TÌM KIẾM NHỊ PHÂN (BINARY SEARCH) ===\\n\";",
+      "    int pos = binarySearch(a, 0, n - 1, x);",
+      "    if (pos != -1)",
+      "        cout << \"Tim thay \" << x << \" tai vi tri: \" << pos << endl;",
+      "    else",
+      "        cout << \"Khong tim thay \" << x << \" trong mang!\\n\";",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "bubble_sort": {
+    "name": "Bubble Sort (Nổi bọt cơ bản)",
+    "category": "sort",
+    "best": "O(N^2)",
+    "avg": "O(N^2)",
+    "worst": "O(N^2)",
+    "space": "O(1)",
+    "stable": "Có (Stable)",
+    "codeOffset": 9,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "void printArray(int a[], int n) {",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
+      "    cout << endl;",
+      "}",
+      "",
+      "// 1. Thuật toán Nổi Bọt cơ bản",
+      "void bubbleSort(int a[], int n) {",
+      "    for (int i = 0; i < n - 1; i++) {",
+      "        for (int j = 0; j < n - i - 1; j++) {",
+      "            if (a[j] > a[j + 1]) {",
+      "                swap(a[j], a[j + 1]); // Đổi chỗ nếu đứng sai thứ tự",
+      "            }",
+      "        }",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {64, 34, 25, 12, 22, 11, 90};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau: \"; printArray(a, n);",
+      "    bubbleSort(a, n);",
+      "    cout << \"Sau khi Bubble Sort: \"; printArray(a, n);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "bubble_sort_optimized": {
+    "name": "Bubble Sort (Nổi bọt có cờ hiệu tối ưu)",
+    "category": "sort",
+    "best": "O(N)",
+    "avg": "O(N^2)",
+    "worst": "O(N^2)",
+    "space": "O(1)",
+    "stable": "Có (Stable)",
+    "codeOffset": 9,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "void printArray(int a[], int n) {",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
+      "    cout << endl;",
+      "}",
+      "",
+      "// 1. Nổi bọt tối ưu: Dừng sớm nếu mảng đã có thứ tự",
+      "void bubbleSortOptimized(int a[], int n) {",
+      "    bool haveSwap = false;",
+      "    for (int i = 0; i < n - 1; i++) {",
+      "        haveSwap = false;",
+      "        for (int j = 0; j < n - i - 1; j++) {",
+      "            if (a[j] > a[j + 1]) {",
+      "                swap(a[j], a[j + 1]);",
+      "                haveSwap = true;",
+      "            }",
+      "        }",
+      "        if (!haveSwap) break; // Khong co hoán vị -> Mảng đã sắp xếp xong",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {12, 15, 23, 40, 55, 60};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau: \"; printArray(a, n);",
+      "    bubbleSortOptimized(a, n);",
+      "    cout << \"Ket qua: \"; printArray(a, n);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "selection_sort": {
+    "name": "Selection Sort (Chọn trực tiếp)",
+    "category": "sort",
+    "best": "O(N^2)",
+    "avg": "O(N^2)",
+    "worst": "O(N^2)",
+    "space": "O(1)",
+    "stable": "Không (Unstable)",
+    "codeOffset": 9,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "void printArray(int a[], int n) {",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
+      "    cout << endl;",
+      "}",
+      "",
+      "// 1. Thuật toán Chọn Trực Tiếp (Selection Sort)",
+      "void selectionSort(int a[], int n) {",
+      "    for (int i = 0; i < n - 1; i++) {",
+      "        int min_idx = i; // Giả sử phần tử nhỏ nhất ở vị trí i",
+      "        for (int j = i + 1; j < n; j++) {",
+      "            if (a[j] < a[min_idx])",
+      "                min_idx = j; // Cập nhật vị trí phần tử nhỏ nhất",
+      "        }",
+      "        if (min_idx != i)",
+      "            swap(a[i], a[min_idx]); // Đưa giá trị nhỏ nhất về đầu đoạn",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {29, 10, 14, 37, 13};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Ban dau: \"; printArray(a, n);",
+      "    selectionSort(a, n);",
+      "    cout << \"Sau Selection Sort: \"; printArray(a, n);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "interchange_sort": {
+    "name": "Interchange Sort (Đổi chỗ trực tiếp)",
+    "category": "sort",
+    "best": "O(N^2)",
+    "avg": "O(N^2)",
+    "worst": "O(N^2)",
+    "space": "O(1)",
+    "stable": "Không (Unstable)",
+    "codeOffset": 9,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "void printArray(int a[], int n) {",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
+      "    cout << endl;",
+      "}",
+      "",
+      "// 1. Thuật toán Đổi Chỗ Trực Tiếp (Interchange Sort)",
+      "void interchangeSort(int a[], int n) {",
+      "    for (int i = 0; i < n - 1; i++) {",
+      "        for (int j = i + 1; j < n; j++) {",
+      "            if (a[j] < a[i]) {",
+      "                swap(a[i], a[j]); // Đổi chỗ ngay khi tìm thấy phần tử nhỏ hơn",
+      "            }",
+      "        }",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {45, 12, 85, 32, 89, 39, 69, 44};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau: \"; printArray(a, n);",
+      "    interchangeSort(a, n);",
+      "    cout << \"Sau Interchange Sort: \"; printArray(a, n);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "insertion_sort": {
+    "name": "Insertion Sort (Chèn trực tiếp)",
+    "category": "sort",
+    "best": "O(N)",
+    "avg": "O(N^2)",
+    "worst": "O(N^2)",
+    "space": "O(1)",
+    "stable": "Có (Stable)",
+    "codeOffset": 9,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "void printArray(int a[], int n) {",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
+      "    cout << endl;",
+      "}",
+      "",
+      "// 1. Thuật toán Chèn Trực Tiếp (Insertion Sort)",
+      "void insertionSort(int a[], int n) {",
+      "    for (int i = 1; i < n; i++) {",
+      "        int key = a[i]; // Phần tử cần chèn vào dãy con đã sắp",
+      "        int j = i - 1;",
+      "        while (j >= 0 && a[j] > key) {",
+      "            a[j + 1] = a[j]; // Dời phần tử sang phải",
+      "            j--;",
+      "        }",
+      "        a[j + 1] = key; // Chèn key vào vị trí thích hợp",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {12, 11, 13, 5, 6};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau: \"; printArray(a, n);",
+      "    insertionSort(a, n);",
+      "    cout << \"Sau Insertion Sort: \"; printArray(a, n);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "merge_sort": {
+    "name": "Merge Sort (⭐ Trực quan Giá Đỡ Trộn Mảng Con)",
+    "category": "sort",
+    "best": "O(N log N)",
+    "avg": "O(N log N)",
+    "worst": "O(N log N)",
+    "space": "O(N)",
+    "stable": "Có (Stable)",
+    "codeOffset": 6,
+    "code": [
+      "#include <iostream>",
+      "#include <vector>",
+      "using namespace std;",
+      "",
+      "// 1. Hàm trộn 2 mảng con đã có thứ tự a[l..m] và a[m+1..r]",
+      "void merge(int a[], int l, int m, int r) {",
+      "    vector<int> left(a + l, a + m + 1);",
+      "    vector<int> right(a + m + 1, a + r + 1);",
+      "    int i = 0, j = 0, k = l;",
+      "    while (i < left.size() && j < right.size()) {",
+      "        if (left[i] <= right[j]) a[k++] = left[i++];",
+      "        else a[k++] = right[j++];",
+      "    }",
+      "    while (i < left.size()) a[k++] = left[i++];",
+      "    while (j < right.size()) a[k++] = right[j++];",
+      "}",
+      "",
+      "// 2. Hàm Merge Sort đệ quy chia đôi mảng",
+      "void mergeSort(int a[], int l, int r) {",
+      "    if (l < r) {",
+      "        int m = l + (r - l) / 2;",
+      "        mergeSort(a, l, m);",
+      "        mergeSort(a, m + 1, r);",
+      "        merge(a, l, m, r);",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {38, 27, 43, 3, 9, 82, 10};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau:\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    mergeSort(a, 0, n - 1);",
+      "    cout << \"Sau khi Merge Sort:\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "heap_sort": {
+    "name": "Heap Sort (⭐ Trực quan Cây Nhị Phân Hoàn Chỉnh & Mảng)",
+    "category": "sort",
+    "best": "O(N log N)",
+    "avg": "O(N log N)",
+    "worst": "O(N log N)",
+    "space": "O(1)",
+    "stable": "Không (Unstable)",
+    "codeOffset": 5,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "// 1. Hàm vun đống Max-Heap tại nút gốc i trong mảng kích thước n",
+      "void heapify(int a[], int n, int i) {",
+      "    int largest = i;       // Khởi tạo nút lớn nhất là gốc",
+      "    int l = 2 * i + 1;     // Con trái = 2*i + 1",
+      "    int r = 2 * i + 2;     // Con phải = 2*i + 2",
+      "    if (l < n && a[l] > a[largest]) largest = l;",
+      "    if (r < n && a[r] > a[largest]) largest = r;",
+      "    if (largest != i) {",
+      "        swap(a[i], a[largest]);",
+      "        heapify(a, n, largest); // Đệ quy vun đống cây con bị ảnh hưởng",
+      "    }",
+      "}",
+      "",
+      "// 2. Thuật toán Heap Sort",
+      "void heapSort(int a[], int n) {",
+      "    // Xây dựng Max-Heap ban đầu từ các nút không phải lá",
+      "    for (int i = n / 2 - 1; i >= 0; i--) heapify(a, n, i);",
+      "    // Trích xuất từng phần tử lớn nhất ra cuối mảng",
+      "    for (int i = n - 1; i > 0; i--) {",
+      "        swap(a[0], a[i]);",
+      "        heapify(a, i, 0); // Vun đống lại mảng đã thu hẹp",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {4, 10, 3, 5, 1};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau:\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    heapSort(a, n);",
+      "    cout << \"Sau khi Heap Sort:\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "quick_sort": {
+    "name": "Quick Sort (⭐ Trực quan 3 Phân Vùng Lomuto & Pivot)",
+    "category": "sort",
+    "best": "O(N log N)",
+    "avg": "O(N log N)",
+    "worst": "O(N^2)",
+    "space": "O(log N)",
+    "stable": "Không (Unstable)",
+    "codeOffset": 5,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "// 1. Phân hoạch Lomuto với chốt pivot = a[high]",
+      "int partition(int a[], int low, int high) {",
+      "    int pivot = a[high];   // Chọn phần tử cuối làm pivot",
+      "    int i = low - 1;       // Vùng các phần tử <= pivot",
+      "    for (int j = low; j < high; j++) {",
+      "        if (a[j] <= pivot) {",
+      "            i++;",
+      "            swap(a[i], a[j]);",
+      "        }",
+      "    }",
+      "    swap(a[i + 1], a[high]); // Đưa pivot về đúng vị trí trung gian",
+      "    return i + 1;",
+      "}",
+      "",
+      "// 2. Quick Sort đệ quy chia để trị",
+      "void quickSort(int a[], int low, int high) {",
+      "    if (low < high) {",
+      "        int pi = partition(a, low, high);",
+      "        quickSort(a, low, pi - 1);  // Sắp xếp nửa trái",
+      "        quickSort(a, pi + 1, high); // Sắp xếp nửa phải",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {10, 80, 30, 90, 40, 50, 70};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau:\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    quickSort(a, 0, n - 1);",
+      "    cout << \"Sau khi Quick Sort:\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "ll_sandbox": {
+    "name": "🎮 Mini-Game Sandbox: Kéo Thả Con Trỏ & Va Chạm Tự Do",
+    "category": "linkedlist",
+    "best": "O(1)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 0,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "// ĐỊNH NGHĨA CẤU TRÚC NODE DANH SÁCH LIÊN KẾT ĐƠN C++",
+      "struct Node {",
+      "    int data;       // Giá trị lưu trữ",
+      "    Node* next;     // Con trỏ lưu địa chỉ (0x...) Node tiếp theo",
+      "    Node(int val) : data(val), next(nullptr) {}",
+      "};",
+      "",
+      "void printList(Node* head) {",
+      "    Node* cur = head;",
+      "    cout << \"HEAD -> \";",
+      "    while (cur != nullptr) {",
+      "        cout << \"[\" << cur->data << \"] -> \";",
+      "        cur = cur->next;",
+      "    }",
+      "    cout << \"nullptr\" << endl;",
+      "}",
+      "",
+      "int main() {",
+      "    // Code C++ hoàn chỉnh sẽ được SINH TỰ ĐỘNG trực tiếp",
+      "    // theo từng thao tác kéo dây, thêm node của bạn trên canvas!",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "singly_traverse": {
+    "name": "03b: Duyệt Danh Sách Liên Kết Đơn (Traverse)",
+    "category": "linkedlist",
+    "best": "O(1)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(1)",
+    "stable": "N/A",
+    "codeOffset": 12,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "struct Node {",
+      "    int data;",
+      "    Node* next;",
+      "    Node(int v) : data(v), next(nullptr) {}",
+      "};",
+      "",
+      "// 1. Hàm duyệt danh sách liên kết từ Head tới nullptr",
+      "void printList(Node* head) {",
+      "    Node* current = head;",
+      "    while (current != nullptr) {",
+      "        cout << \"[\" << current->data << \"] -> \";",
+      "        current = current->next; // Nhảy sang node tiếp theo",
+      "    }",
+      "    cout << \"nullptr\" << endl;",
+      "}",
+      "",
+      "int main() {",
+      "    Node* head = new Node(10);",
+      "    head->next = new Node(25);",
+      "    head->next->next = new Node(40);",
+      "    cout << \"Duyet danh sach: \";",
+      "    printList(head);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "singly_sorted_insert": {
+    "name": "03d/e: Chèn Node Vào Danh Sách Có Thứ Tự (Sorted Insert)",
+    "category": "linkedlist",
+    "best": "O(1)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(1)",
+    "stable": "N/A",
+    "codeOffset": 11,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "struct Node {",
+      "    int data;",
+      "    Node* next;",
+      "    Node(int v) : data(v), next(nullptr) {}",
+      "};",
+      "",
+      "// 1. Chèn node mới vào danh sách đã có thứ tự tăng dần",
+      "void insertSorted(Node*& head, int val) {",
+      "    Node* newNode = new Node(val);",
+      "    if (!head || head->data >= val) {",
+      "        newNode->next = head;",
+      "        head = newNode;",
+      "        return;",
+      "    }",
+      "    Node* cur = head;",
+      "    while (cur->next && cur->next->data < val) {",
+      "        cur = cur->next;",
+      "    }",
+      "    newNode->next = cur->next;",
+      "    cur->next = newNode;",
+      "}",
+      "",
+      "int main() {",
+      "    Node* head = nullptr;",
+      "    insertSorted(head, 25);",
+      "    insertSorted(head, 10);",
+      "    insertSorted(head, 40);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "singly_delete": {
+    "name": "03f: Xóa Node Khỏi Danh Sách Liên Kết (Delete Node)",
+    "category": "linkedlist",
+    "best": "O(1)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(1)",
+    "stable": "N/A",
+    "codeOffset": 11,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "struct Node {",
+      "    int data;",
+      "    Node* next;",
+      "    Node(int v) : data(v), next(nullptr) {}",
+      "};",
+      "",
+      "// 1. Hàm xóa node có giá trị key khỏi danh sách",
+      "void deleteNode(Node*& head, int key) {",
+      "    Node* temp = head; Node* prev = nullptr;",
+      "    if (temp && temp->data == key) {",
+      "        head = temp->next;",
+      "        delete temp; // Giải phóng ô nhớ trên Heap",
+      "        return;",
+      "    }",
+      "    while (temp && temp->data != key) {",
+      "        prev = temp;",
+      "        temp = temp->next;",
+      "    }",
+      "    if (!temp) return; // Khong tim thay key",
+      "    prev->next = temp->next;",
+      "    delete temp; // Thu hoi bo nho dong",
+      "}",
+      "",
+      "int main() {",
+      "    Node* head = new Node(10);",
+      "    head->next = new Node(25);",
+      "    deleteNode(head, 25);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "singly_recursive_reverse": {
+    "name": "03g/h: Đệ Quy In Ngược Danh Sách (Recursive Reverse Print)",
+    "category": "linkedlist",
+    "best": "O(N)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 11,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "struct Node {",
+      "    int data;",
+      "    Node* next;",
+      "    Node(int v) : data(v), next(nullptr) {}",
+      "};",
+      "",
+      "// 1. In ngược danh sách bằng đệ quy Call-Stack",
+      "void reversePrint(Node* p) {",
+      "    if (p == nullptr) return; // Điều kiện dừng cơ sở",
+      "    reversePrint(p->next);    // Gọi đệ quy đi tới cuối danh sách",
+      "    cout << \"[\" << p->data << \"] \"; // In ra khi Call-Stack quay lui",
+      "}",
+      "",
+      "int main() {",
+      "    Node* head = new Node(10);",
+      "    head->next = new Node(25);",
+      "    head->next->next = new Node(40);",
+      "    cout << \"In nguoc de quy: \";",
+      "    reversePrint(head);",
+      "    cout << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "doubly_list": {
+    "name": "03-Extra: Danh Sách Liên Kết Đôi (Doubly Linked List)",
+    "category": "linkedlist",
+    "best": "O(1)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 12,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "// Cấu trúc Node có 2 con trỏ: prev và next",
+      "struct DNode {",
+      "    int data;",
+      "    DNode* prev;",
+      "    DNode* next;",
+      "    DNode(int v) : data(v), prev(nullptr), next(nullptr) {}",
+      "};",
+      "",
+      "void insertHead(DNode*& head, int val) {",
+      "    DNode* newNode = new DNode(val);",
+      "    newNode->next = head;",
+      "    if (head) head->prev = newNode;",
+      "    head = newNode;",
+      "}",
+      "",
+      "int main() {",
+      "    DNode* head = nullptr;",
+      "    insertHead(head, 30);",
+      "    insertHead(head, 20);",
+      "    insertHead(head, 10);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "stack_adt": {
+    "name": "Stack ADT: Ngăn Xếp LIFO (Push / Pop / Top)",
+    "category": "stackqueue",
+    "best": "O(1)",
+    "avg": "O(1)",
+    "worst": "O(1)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 6,
+    "code": [
+      "#include <iostream>",
+      "#include <stack>",
+      "using namespace std;",
+      "",
+      "// Thao tác với Ngăn Xếp (LIFO - Last In First Out)",
+      "void demoStack() {",
+      "    stack<int> st;",
+      "    st.push(10); // Đẩy 10 vào đỉnh",
+      "    st.push(20); // Đẩy 20 vào đỉnh",
+      "    cout << \"Phan tu o dinh Top: \" << st.top() << endl;",
+      "    st.pop();    // Lay 20 ra khoi stack",
+      "    cout << \"Top moi sau khi pop: \" << st.top() << endl;",
+      "}",
+      "",
+      "int main() {",
+      "    demoStack();",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "rpn_calculator": {
+    "name": "RPN Calculator: Đánh Giá Biểu Thức Hậu Tố (Postfix)",
+    "category": "stackqueue",
+    "best": "O(N)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 7,
+    "code": [
+      "#include <iostream>",
+      "#include <stack>",
+      "#include <vector>",
+      "#include <string>",
+      "using namespace std;",
+      "",
+      "int evalRPN(const vector<string>& tokens) {",
+      "    stack<int> st;",
+      "    for (const string& t : tokens) {",
+      "        if (t == \"+\" || t == \"-\" || t == \"*\" || t == \"/\") {",
+      "            int b = st.top(); st.pop();",
+      "            int a = st.top(); st.pop();",
+      "            if (t == \"+\") st.push(a + b);",
+      "            else if (t == \"-\") st.push(a - b);",
+      "            else if (t == \"*\") st.push(a * b);",
+      "            else if (t == \"/\") st.push(a / b);",
+      "        } else st.push(stoi(t));",
+      "    }",
+      "    return st.top();",
+      "}",
+      "",
+      "int main() {",
+      "    vector<string> exp = {\"3\", \"4\", \"+\", \"2\", \"*\", \"7\", \"-\"};",
+      "    cout << \"Gia tri bieu thuc RPN: \" << evalRPN(exp) << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "queue_adt": {
+    "name": "Queue ADT: Hàng Đợi FIFO (Enqueue / Dequeue / Front)",
+    "category": "stackqueue",
+    "best": "O(1)",
+    "avg": "O(1)",
+    "worst": "O(1)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 6,
+    "code": [
+      "#include <iostream>",
+      "#include <queue>",
+      "using namespace std;",
+      "",
+      "// Thao tác Hàng Đợi (FIFO - First In First Out)",
+      "void demoQueue() {",
+      "    queue<int> q;",
+      "    q.push(10); // Enqueue: vao cuoi hang",
+      "    q.push(20);",
+      "    cout << \"Dau hang (Front): \" << q.front() << endl;",
+      "    q.pop();    // Dequeue: ra khoi dau hang",
+      "    cout << \"Front moi: \" << q.front() << endl;",
+      "}",
+      "",
+      "int main() {",
+      "    demoQueue();",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "bst_operations": {
+    "name": "Binary Search Tree (Thêm & Tìm Kiếm Nút BST)",
+    "category": "trees",
+    "best": "O(log N)",
+    "avg": "O(log N)",
+    "worst": "O(N)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 11,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "struct BSTNode {",
+      "    int data;",
+      "    BSTNode* left;",
+      "    BSTNode* right;",
+      "    BSTNode(int v) : data(v), left(nullptr), right(nullptr) {}",
+      "};",
+      "",
+      "BSTNode* insert(BSTNode* root, int val) {",
+      "    if (!root) return new BSTNode(val);",
+      "    if (val < root->data) root->left = insert(root->left, val);",
+      "    else if (val > root->data) root->right = insert(root->right, val);",
+      "    return root;",
+      "}",
+      "",
+      "bool search(BSTNode* root, int key) {",
+      "    if (!root) return false;",
+      "    if (root->data == key) return true;",
+      "    if (key < root->data) return search(root->left, key);",
+      "    return search(root->right, key);",
+      "}",
+      "",
+      "int main() {",
+      "    BSTNode* root = nullptr;",
+      "    root = insert(root, 50);",
+      "    insert(root, 30); insert(root, 70);",
+      "    cout << \"Tim 30: \" << (search(root, 30) ? \"Co\" : \"Khong\") << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "bst_traversals": {
+    "name": "Tree Traversals (Duyệt Cây: In-order, Pre-order, Post-order)",
+    "category": "trees",
+    "best": "O(N)",
+    "avg": "O(N)",
+    "worst": "O(N)",
+    "space": "O(H)",
+    "stable": "N/A",
+    "codeOffset": 11,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "struct BSTNode {",
+      "    int data;",
+      "    BSTNode* left; BSTNode* right;",
+      "    BSTNode(int v) : data(v), left(nullptr), right(nullptr) {}",
+      "};",
+      "",
+      "// Duyệt Trung Thứ Tự (In-order: Left -> Root -> Right) in ra thứ tự tăng dần",
+      "void inorder(BSTNode* root) {",
+      "    if (root) {",
+      "        inorder(root->left);",
+      "        cout << root->data << \" \";",
+      "        inorder(root->right);",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    BSTNode* root = new BSTNode(50);",
+      "    root->left = new BSTNode(30); root->right = new BSTNode(70);",
+      "    cout << \"In-order Traversal: \"; inorder(root); cout << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "avl_tree": {
+    "name": "AVL Tree (Cây Tự Cân Bằng: Quay LL, RR, LR, RL)",
+    "category": "trees",
+    "best": "O(log N)",
+    "avg": "O(log N)",
+    "worst": "O(log N)",
+    "space": "O(N)",
+    "stable": "N/A",
+    "codeOffset": 12,
+    "code": [
+      "#include <iostream>",
+      "#include <algorithm>",
+      "using namespace std;",
+      "",
+      "struct AVLNode {",
+      "    int key, height;",
+      "    AVLNode* left; AVLNode* right;",
+      "    AVLNode(int k) : key(k), height(1), left(nullptr), right(nullptr) {}",
+      "};",
+      "",
+      "int height(AVLNode* n) { return n ? n->height : 0; }",
+      "int getBalance(AVLNode* n) { return n ? height(n->left) - height(n->right) : 0; }",
+      "AVLNode* rotateRight(AVLNode* y) {",
+      "    AVLNode* x = y->left; AVLNode* T2 = x->right;",
+      "    x->right = y; y->left = T2;",
+      "    y->height = max(height(y->left), height(y->right)) + 1;",
+      "    x->height = max(height(x->left), height(x->right)) + 1;",
+      "    return x;",
+      "}",
+      "",
+      "int main() {",
+      "    AVLNode* root = new AVLNode(30);",
+      "    cout << \"Chieu cao cay AVL: \" << height(root) << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "hash_chaining": {
+    "name": "Hash Table (Giải Quyết Đụng Độ Bằng Nối Kết - Chaining)",
+    "category": "hashtable",
+    "best": "O(1)",
+    "avg": "O(1)",
+    "worst": "O(N)",
+    "space": "O(M + N)",
+    "stable": "N/A",
+    "codeOffset": 11,
+    "code": [
+      "#include <iostream>",
+      "#include <vector>",
+      "#include <list>",
+      "using namespace std;",
+      "",
+      "class HashTableChaining {",
+      "    int BUCKET;",
+      "    vector<list<int>> table;",
+      "public:",
+      "    HashTableChaining(int b) : BUCKET(b), table(b) {}",
+      "    int hashFunc(int key) { return key % BUCKET; }",
+      "    void insert(int key) {",
+      "        int idx = hashFunc(key);",
+      "        table[idx].push_back(key); // Chèn vào danh sách liên kết tại bucket idx",
+      "    }",
+      "};",
+      "",
+      "int main() {",
+      "    HashTableChaining ht(7);",
+      "    ht.insert(10); ht.insert(17); // 10 % 7 = 3, 17 % 7 = 3 (Chaining chung ô 3)",
+      "    cout << \"Them thanh cong vao Hash Table Chaining!\\n\";",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "hash_linear_probing": {
+    "name": "Hash Table (Dò Tuyến Tính - Linear Probing Open Addressing)",
+    "category": "hashtable",
+    "best": "O(1)",
+    "avg": "O(1)",
+    "worst": "O(N)",
+    "space": "O(M)",
+    "stable": "N/A",
+    "codeOffset": 12,
+    "code": [
+      "#include <iostream>",
+      "#include <vector>",
+      "using namespace std;",
+      "",
+      "class HashTableLinearProbing {",
+      "    int M = 7;",
+      "    vector<int> table;",
+      "    vector<bool> occupied;",
+      "public:",
+      "    HashTableLinearProbing() : table(M, 0), occupied(M, false) {}",
+      "    int insert(int key) {",
+      "        int idx = key % M;",
+      "        while (occupied[idx]) idx = (idx + 1) % M; // Dò tìm ô trống kế tiếp",
+      "        table[idx] = key; occupied[idx] = true;",
+      "        return idx;",
+      "    }",
+      "};",
+      "",
+      "int main() {",
+      "    HashTableLinearProbing ht;",
+      "    int pos1 = ht.insert(10); // 10 % 7 = 3",
+      "    int pos2 = ht.insert(17); // Dung do -> do sang o 4",
+      "    cout << \"10 luu tai o \" << pos1 << \", 17 luu tai o \" << pos2 << endl;",
+      "    return 0;",
+      "}"
+    ]
+  }
+};
+/* SEARCH GENERATORS */
+    function generateLinearSearchSteps(arr, x) {
+      const steps = [];
+      steps.push({
+        type: 'array', arr: [...arr], highlights: {}, pointers: {}, pass: 0,
+        desc: 'Bắt đầu Tìm kiếm tuyến tính phần tử X = ' + x + ' trên mảng ' + arr.length + ' phần tử.',
+        codeLines: [4, 5], vars: { i: '-', 'A[i]': '-', x: x, 'Kết quả': 'Chưa thấy' }
+      });
+
+      let found = false;
+      for (let i = 0; i < arr.length; i++) {
+        steps.push({
+          type: 'array', arr: [...arr], highlights: { [i]: 'comparing' }, pointers: { [i]: 'i' }, pass: i + 1,
+          desc: 'Pass ' + (i + 1) + ': Kiểm tra A[' + i + '] = ' + arr[i] + '. So sánh với X = ' + x + '.',
+          codeLines: [5, 6], vars: { i: i, 'A[i]': arr[i], x: x, 'So sánh': arr[i] + ' == ' + x + ' ?' }
+        });
+
+        if (arr[i] === x) {
+          steps.push({
+            type: 'array', arr: [...arr], highlights: { [i]: 'sorted' }, pointers: { [i]: 'Tìm thấy!' }, pass: i + 1,
+            desc: '🎉 TÌM THẤY! A[' + i + '] = ' + x + '. Dừng tại pass ' + (i + 1) + '. Trả về chỉ số ' + i + '.',
+            codeLines: [6, 7], vars: { i: i, 'A[i]': arr[i], x: x, 'Kết quả': 'Tìm thấy tại index ' + i }
+          });
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        steps.push({
+          type: 'array', arr: [...arr], highlights: {}, pointers: {}, pass: arr.length,
+          desc: 'Đã duyệt hết mảng nhưng không tìm thấy giá trị X = ' + x + '. Trả về -1.',
+          codeLine: 9, vars: { i: arr.length, 'A[i]': 'Hết mảng', x: x, 'Kết quả': 'Không tồn tại (-1)' }
+        });
+      }
+      return steps;
+    }
+
+    function generateBinarySearchSteps(origArr, x) {
+      const arr = [...origArr].sort((a, b) => a - b);
+      const steps = [];
+      steps.push({
+        type: 'array', arr: [...arr], highlights: {}, pointers: {}, pass: 0,
+        desc: 'Bắt đầu Tìm kiếm nhị phân phần tử X = ' + x + '. Mảng đã sắp xếp: [' + arr.join(', ') + '].',
+        codeLines: [5, 6], vars: { left: 0, right: arr.length - 1, mid: '-', x: x }
+      });
+
+      let left = 0, right = arr.length - 1, pass = 0, found = false;
+
+      while (left <= right) {
+        pass++;
+        const mid = Math.floor((left + right) / 2);
+        const highlights = {};
+        for (let k = left; k <= right; k++) highlights[k] = 'pivot';
+        highlights[mid] = 'comparing';
+
+        steps.push({
+          type: 'array', arr: [...arr], highlights: highlights,
+          pointers: { [left]: 'left', [right]: 'right', [mid]: 'mid' },
+          pass: pass,
+          desc: 'Pass ' + pass + ': Vùng tìm kiếm [' + left + '..' + right + ']. Tính mid = (' + left + '+' + right + ')/2 = ' + mid + '. So sánh A[' + mid + '] = ' + arr[mid] + ' với X = ' + x + '.',
+          codeLines: [6, 7, 8], vars: { left: left, right: right, mid: mid, 'A[mid]': arr[mid], x: x }
+        });
+
+        if (arr[mid] === x) {
+          steps.push({
+            type: 'array', arr: [...arr], highlights: { [mid]: 'sorted' },
+            pointers: { [mid]: 'Tìm thấy!' }, pass: pass,
+            desc: '🎉 TÌM THẤY! A[' + mid + '] == ' + x + '. Trả về vị trí index ' + mid + '.',
+            codeLines: [8, 9], vars: { left: left, right: right, mid: mid, 'Kết quả': 'Tìm thấy tại index ' + mid }
+          });
+          found = true;
+          break;
+        } else if (arr[mid] < x) {
+          steps.push({
+            type: 'array', arr: [...arr], highlights: highlights, pointers: { [mid]: 'A[mid] < X' }, pass: pass,
+            desc: 'Vì A[' + mid + '] = ' + arr[mid] + ' < ' + x + ', loại bỏ nửa trái. Cập nhật left = mid + 1 = ' + (mid + 1) + '.',
+            codeLines: [10, 11], vars: { left: mid + 1, right: right, mid: mid, 'Hành động': 'Thu hẹp sang phải' }
+          });
+          left = mid + 1;
+        } else {
+          steps.push({
+            type: 'array', arr: [...arr], highlights: highlights, pointers: { [mid]: 'A[mid] > X' }, pass: pass,
+            desc: 'Vì A[' + mid + '] = ' + arr[mid] + ' > ' + x + ', loại bỏ nửa phải. Cập nhật right = mid - 1 = ' + (mid - 1) + '.',
+            codeLines: [12, 13], vars: { left: left, right: mid - 1, mid: mid, 'Hành động': 'Thu hẹp sang trái' }
+          });
+          right = mid - 1;
+        }
+      }
+
+      if (!found) {
+        steps.push({
+          type: 'array', arr: [...arr], highlights: {}, pointers: {}, pass: pass,
+          desc: 'Vùng tìm kiếm rỗng (left > right). Không tìm thấy X = ' + x + '. Trả về -1.',
+          codeLine: 15, vars: { left: left, right: right, 'Kết quả': 'Không tìm thấy (-1)' }
+        });
+      }
+      return steps;
+    }
+
+    /* STANDARD SORT GENERATORS */
+    function generateBubbleSortSteps(origArr, optimized) {
+      const a = [...origArr];
+      const n = a.length;
+      const steps = [];
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: {}, pointers: {}, pass: 0,
+        desc: 'Bắt đầu ' + (optimized ? 'Bubble Sort Cải tiến' : 'Bubble Sort Cơ bản') + '. Mảng gồm ' + n + ' phần tử.',
+        codeLines: [9, 10], vars: { 'Tổng phần tử': n, 'Loại': optimized ? 'Có cờ hiệu haveSwap' : 'Cơ bản' }
+      });
+
+      for (let i = 0; i < n - 1; i++) {
+        let haveSwap = false;
+        steps.push({
+          type: 'array', arr: [...a], highlights: {}, pointers: {}, pass: i + 1,
+          desc: '--- PASS ' + (i + 1) + ' --- (Đẩy phần tử lớn nhất về vị trí cuối chưa sắp xếp).',
+          codeLines: [10, 11], vars: { 'Pass i': i + 1, haveSwap: optimized ? 'false' : 'Không dùng' }
+        });
+
+        for (let j = 0; j < n - i - 1; j++) {
+          steps.push({
+            type: 'array', arr: [...a], highlights: { [j]: 'comparing', [j + 1]: 'comparing' },
+            pointers: { [j]: 'j', [j + 1]: 'j+1' }, pass: i + 1,
+            desc: 'Pass ' + (i + 1) + ', so sánh cặp A[' + j + ']=' + a[j] + ' và A[' + (j + 1) + ']=' + a[j + 1] + '.',
+            codeLines: [11, 12], vars: { i: i, j: j, 'A[j]': a[j], 'A[j+1]': a[j + 1], 'Cần swap?': a[j] > a[j + 1] ? 'CÓ' : 'KHÔNG' }
+          });
+
+          if (a[j] > a[j + 1]) {
+            const temp = a[j]; a[j] = a[j + 1]; a[j + 1] = temp;
+            haveSwap = true;
+            steps.push({
+              type: 'array', arr: [...a], highlights: { [j]: 'swapping', [j + 1]: 'swapping' },
+              pointers: { [j]: 'Swap', [j + 1]: 'Swap' }, pass: i + 1,
+              desc: 'Hoán đổi ' + a[j + 1] + ' và ' + a[j] + ' vì ' + a[j + 1] + ' > ' + a[j] + '.',
+              codeLines: [12, 13], vars: { i: i, j: j, 'Đã hoán vị': a[j] + ' <-> ' + a[j + 1], haveSwap: 'true' }
+            });
+          }
+        }
+
+        const sortedMap = {};
+        for (let k = n - i - 1; k < n; k++) sortedMap[k] = 'sorted';
+
+        steps.push({
+          type: 'array', arr: [...a], highlights: sortedMap, pointers: { [n - i - 1]: 'Đã chuẩn' }, pass: i + 1,
+          desc: 'Kết thúc Pass ' + (i + 1) + ': Phần tử A[' + (n - i - 1) + ']=' + a[n - i - 1] + ' đã về đúng vị trí cuối đoạn!',
+          codeLine: 10, vars: { 'Pass i xong': i + 1, haveSwap: haveSwap }
+        });
+
+        if (optimized && !haveSwap) {
+          steps.push({
+            type: 'array', arr: [...a], highlights: Object.fromEntries(a.map((_, idx) => [idx, 'sorted'])),
+            pointers: {}, pass: i + 1,
+            desc: '⚡ CẢI TIẾN: Trong suốt Pass ' + (i + 1) + ' không xảy ra hoán đổi nào. Mảng ĐÃ CÓ THỨ TỰ! Dừng sớm.',
+            codeLine: 19, vars: { 'Dừng sớm': 'Đúng', haveSwap: 'false', 'Tổng pass': i + 1 }
+          });
+          return steps;
+        }
+      }
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: Object.fromEntries(a.map((_, idx) => [idx, 'sorted'])),
+        pointers: {}, pass: n - 1, desc: '🎉 Hoàn thành Bubble Sort! Dãy đã tăng dần.', codeLine: 9,
+        vars: { 'Trạng thái': 'Hoàn tất 100%' }
+      });
+      return steps;
+    }
+
+    function generateSelectionSortSteps(origArr) {
+      const a = [...origArr];
+      const n = a.length;
+      const steps = [];
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: {}, pointers: {}, pass: 0,
+        desc: 'Bắt đầu Selection Sort. Tìm min trong đoạn chưa sắp xếp đưa về đầu đoạn.',
+        codeLines: [9, 10], vars: { 'Số phần tử': n }
+      });
+
+      for (let i = 0; i < n - 1; i++) {
+        let min_idx = i;
+        steps.push({
+          type: 'array', arr: [...a], highlights: { [i]: 'pivot' }, pointers: { [i]: 'i (min ban đầu)' }, pass: i + 1,
+          desc: '--- PASS ' + (i + 1) + ': Tìm min trong đoạn [' + i + '..' + (n - 1) + ']. Gán min_idx = ' + i + ' (A[' + i + ']=' + a[i] + ').',
+          codeLines: [10, 11], vars: { i: i, min_idx: min_idx, 'A[min_idx]': a[min_idx] }
+        });
+
+        for (let j = i + 1; j < n; j++) {
+          steps.push({
+            type: 'array', arr: [...a], highlights: { [min_idx]: 'pivot', [j]: 'comparing' },
+            pointers: { [min_idx]: 'min_idx', [j]: 'j' }, pass: i + 1,
+            desc: 'So sánh A[j]=' + a[j] + ' với min hiện tại A[' + min_idx + ']=' + a[min_idx] + '.',
+            codeLines: [12, 13], vars: { i: i, j: j, min_idx: min_idx, 'A[j]': a[j], 'A[min_idx]': a[min_idx] }
+          });
+
+          if (a[j] < a[min_idx]) {
+            min_idx = j;
+            steps.push({
+              type: 'array', arr: [...a], highlights: { [min_idx]: 'swapping' }, pointers: { [min_idx]: 'min mới' }, pass: i + 1,
+              desc: 'Tìm thấy min mới! Cập nhật min_idx = ' + j + ' (' + a[j] + ').',
+              codeLines: [13, 14], vars: { i: i, j: j, min_idx: min_idx, 'A[min_idx]': a[min_idx] }
+            });
+          }
+        }
+
+        if (min_idx !== i) {
+          const temp = a[i]; a[i] = a[min_idx]; a[min_idx] = temp;
+          steps.push({
+            type: 'array', arr: [...a], highlights: { [i]: 'swapping', [min_idx]: 'swapping' },
+            pointers: { [i]: 'Swap', [min_idx]: 'Swap' }, pass: i + 1,
+            desc: 'Hoán đổi A[' + i + '] với min A[' + min_idx + '].',
+            codeLines: [16, 17], vars: { i: i, min_idx: min_idx, 'Hoán đổi': 'A[' + i + '] <-> A[' + min_idx + ']' }
+          });
+        }
+
+        const sortedMap = {};
+        for (let k = 0; k <= i; k++) sortedMap[k] = 'sorted';
+        steps.push({
+          type: 'array', arr: [...a], highlights: sortedMap, pointers: { [i]: 'Đã chuẩn' }, pass: i + 1,
+          desc: 'Kết thúc Pass ' + (i + 1) + ': Vị trí ' + i + ' cố định với giá trị ' + a[i] + '.',
+          codeLine: 10, vars: { 'Xong vị trí': i, 'Giá trị': a[i] }
+        });
+      }
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: Object.fromEntries(a.map((_, idx) => [idx, 'sorted'])),
+        pointers: {}, pass: n - 1, desc: '🎉 Hoàn thành Selection Sort!', codeLine: 9,
+        vars: { 'Trạng thái': 'Hoàn tất 100%' }
+      });
+      return steps;
+    }
+
+    function generateInterchangeSortSteps(origArr) {
+      const a = [...origArr];
+      const n = a.length;
+      const steps = [];
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: {}, pointers: {}, pass: 0,
+        desc: 'Bắt đầu Interchange Sort (Đổi chỗ trực tiếp). Cứ hễ A[i] > A[j] (với i < j) là swap ngay.',
+        codeLines: [9, 10], vars: { 'Số phần tử': n }
+      });
+
+      for (let i = 0; i < n - 1; i++) {
+        for (let j = i + 1; j < n; j++) {
+          steps.push({
+            type: 'array', arr: [...a], highlights: { [i]: 'comparing', [j]: 'comparing' },
+            pointers: { [i]: 'i', [j]: 'j' }, pass: i + 1,
+            desc: 'So sánh cặp A[' + i + ']=' + a[i] + ' với A[' + j + ']=' + a[j] + '.',
+            codeLines: [10, 11, 12], vars: { i: i, j: j, 'A[i]': a[i], 'A[j]': a[j], 'Nghịch thế?': a[i] > a[j] ? 'CÓ (swap)' : 'KHÔNG' }
+          });
+
+          if (a[i] > a[j]) {
+            const temp = a[i]; a[i] = a[j]; a[j] = temp;
+            steps.push({
+              type: 'array', arr: [...a], highlights: { [i]: 'swapping', [j]: 'swapping' },
+              pointers: { [i]: 'Swap', [j]: 'Swap' }, pass: i + 1,
+              desc: 'Hoán vị tức thì: swap(A[' + i + '], A[' + j + ']) -> A[' + i + ']=' + a[i] + ', A[' + j + ']=' + a[j] + '.',
+              codeLines: [12, 13], vars: { i: i, j: j, 'Đã hoán vị': 'A[' + i + '] <-> A[' + j + ']' }
+            });
+          }
+        }
+      }
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: Object.fromEntries(a.map((_, idx) => [idx, 'sorted'])),
+        pointers: {}, pass: n - 1, desc: '🎉 Hoàn thành Interchange Sort!', codeLine: 9,
+        vars: { 'Trạng thái': 'Hoàn tất 100%' }
+      });
+      return steps;
+    }
+
+    function generateInsertionSortSteps(origArr) {
+      const a = [...origArr];
+      const n = a.length;
+      const steps = [];
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: { 0: 'sorted' }, pointers: { 0: 'Đoạn 1 pt' }, pass: 0,
+        desc: 'Bắt đầu Insertion Sort. Coi A[0]=' + a[0] + ' là mảng con 1 phần tử đã sắp xếp.',
+        codeLines: [9, 10], vars: { 'Mảng đã sắp': '[' + a[0] + ']' }
+      });
+
+      for (let i = 1; i < n; i++) {
+        const key = a[i];
+        let j = i - 1;
+
+        steps.push({
+          type: 'array', arr: [...a], highlights: { [i]: 'pivot' }, pointers: { [i]: 'key=' + key }, pass: i,
+          desc: '--- PASS ' + i + ': Rút key = A[' + i + '] = ' + key + '. Tìm vị trí chèn trong đoạn [0..' + (i - 1) + '].',
+          codeLines: [10, 11, 12], vars: { i: i, key: key, j: j }
+        });
+
+        while (j >= 0 && a[j] > key) {
+          steps.push({
+            type: 'array', arr: [...a], highlights: { [j]: 'comparing', [j + 1]: 'swapping' },
+            pointers: { [j]: 'Dời phải' }, pass: i,
+            desc: 'Vì A[' + j + ']=' + a[j] + ' > key (' + key + '), dời A[' + j + '] sang phải vị trí ' + (j + 1) + '.',
+            codeLines: [13, 14, 15], vars: { i: i, key: key, j: j, 'Dời': 'A[' + j + '] -> A[' + (j + 1) + ']' }
+          });
+          a[j + 1] = a[j];
+          j--;
+        }
+
+        a[j + 1] = key;
+        const sortedMap = {};
+        for (let k = 0; k <= i; k++) sortedMap[k] = 'sorted';
+
+        steps.push({
+          type: 'array', arr: [...a], highlights: sortedMap, pointers: { [j + 1]: 'Chèn ' + key }, pass: i,
+          desc: 'Chèn key = ' + key + ' vào A[' + (j + 1) + ']. Đoạn con [0..' + i + '] đã sắp xếp.',
+          codeLines: [17], vars: { i: i, 'Vị trí chèn': j + 1, 'Giá trị': key }
+        });
+      }
+
+      steps.push({
+        type: 'array', arr: [...a], highlights: Object.fromEntries(a.map((_, idx) => [idx, 'sorted'])),
+        pointers: {}, pass: n - 1, desc: '🎉 Hoàn thành Insertion Sort!', codeLine: 9,
+        vars: { 'Trạng thái': 'Hoàn tất 100%' }
+      });
+      return steps;
+    }
+
+    /* ==========================================================================
+       SPECIAL 1: MERGE SORT (SPLIT & MERGE RACK)
+       ========================================================================== */
+    function generateMergeSortSpecialSteps(origArr) {
+      const a = [...origArr];
+      const steps = [];
+      let pass = 0;
+
+      steps.push({
+        type: 'merge_special',
+        fullArr: [...a],
+        l: 0, r: a.length - 1, m: Math.floor((a.length - 1) / 2),
+        leftSub: [], rightSub: [], mergedSub: [],
+        ptrL: -1, ptrR: -1, ptrMerged: -1,
+        phase: 'start', pass: 0,
+        desc: 'Bắt đầu Merge Sort (Chia để trị). Chia đôi mảng thành các đoạn con độc lập, sau đó trộn (Merge) từng cặp mảng con đã sắp trên Giá đỡ 2 tầng.',
+        codeLines: [18, 19, 20],
+        vars: { 'Số phần tử': a.length, 'Phạm vi': '[0..' + (a.length - 1) + ']' }
+      });
+
+      function merge(l, m, r) {
+        pass++;
+        const L = a.slice(l, m + 1);
+        const R = a.slice(m + 1, r + 1);
+        const merged = Array(r - l + 1).fill(null);
+
+        steps.push({
+          type: 'merge_special',
+          fullArr: [...a],
+          l: l, m: m, r: r,
+          leftSub: [...L], rightSub: [...R], mergedSub: [...merged],
+          ptrL: 0, ptrR: 0, ptrMerged: 0,
+          phase: 'setup_rack', pass: pass,
+          desc: 'Pass ' + pass + ': Mở Giá Đỡ Trộn đoạn [' + l + '..' + r + ']. Tách thành Mảng Trái [' + L.join(', ') + '] và Mảng Phải [' + R.join(', ') + '].',
+          codeLines: [5, 6, 7, 8],
+          vars: { 'Đoạn Trái': '[' + l + '..' + m + ']', 'Đoạn Phải': '[' + (m + 1) + '..' + r + ']', ptrL: 0, ptrR: 0 }
+        });
+
+        let i = 0, j = 0, k = 0;
+        while (i < L.length && j < R.length) {
+          const chooseLeft = L[i] <= R[j];
+          steps.push({
+            type: 'merge_special',
+            fullArr: [...a],
+            l: l, m: m, r: r,
+            leftSub: [...L], rightSub: [...R], mergedSub: [...merged],
+            ptrL: i, ptrR: j, ptrMerged: k,
+            phase: 'compare', pass: pass,
+            desc: 'So sánh phần tử đầu hàng: Mảng Trái L[' + i + ']=' + L[i] + ' VS Mảng Phải R[' + j + ']=' + R[j] + '. Chọn ' + (chooseLeft ? 'L['+i+'] = ' + L[i] : 'R['+j+'] = ' + R[j]) + ' vì nhỏ hơn hoặc bằng.',
+            codeLines: [9, 10, 11],
+            vars: { 'L[i]': L[i], 'R[j]': R[j], 'Lựa chọn': chooseLeft ? L[i] : R[j], 'Hạ xuống vị trí': k }
+          });
+
+          if (chooseLeft) {
+            merged[k] = L[i];
+            i++;
+          } else {
+            merged[k] = R[j];
+            j++;
+          }
+          k++;
+
+          steps.push({
+            type: 'merge_special',
+            fullArr: [...a],
+            l: l, m: m, r: r,
+            leftSub: [...L], rightSub: [...R], mergedSub: [...merged],
+            ptrL: i, ptrR: j, ptrMerged: k,
+            phase: 'drop_down', pass: pass,
+            desc: 'Hạ phần tử vừa chọn xuống mảng đích Merged[' + (k - 1) + '] = ' + merged[k - 1] + '. Cập nhật con trỏ.',
+            codeLines: [10, 11],
+            vars: { 'Mảng đích hiện tại': merged.filter(x => x !== null).join(', '), ptrL: i, ptrR: j }
+          });
+        }
+
+        while (i < L.length) {
+          merged[k] = L[i];
+          steps.push({
+            type: 'merge_special',
+            fullArr: [...a],
+            l: l, m: m, r: r,
+            leftSub: [...L], rightSub: [...R], mergedSub: [...merged],
+            ptrL: i, ptrR: j, ptrMerged: k,
+            phase: 'drop_remaining', pass: pass,
+            desc: 'Mảng phải đã hết. Lấy phần tử còn lại của mảng trái: L[' + i + ']=' + L[i] + ' hạ xuống vị trí ' + k + '.',
+            codeLine: 13,
+            vars: { 'Hạ tiếp': L[i], ptrL: i }
+          });
+          i++;
+          k++;
+        }
+
+        while (j < R.length) {
+          merged[k] = R[j];
+          steps.push({
+            type: 'merge_special',
+            fullArr: [...a],
+            l: l, m: m, r: r,
+            leftSub: [...L], rightSub: [...R], mergedSub: [...merged],
+            ptrL: i, ptrR: j, ptrMerged: k,
+            phase: 'drop_remaining', pass: pass,
+            desc: 'Mảng trái đã hết. Lấy phần tử còn lại của mảng phải: R[' + j + ']=' + R[j] + ' hạ xuống vị trí ' + k + '.',
+            codeLine: 14,
+            vars: { 'Hạ tiếp': R[j], ptrR: j }
+          });
+          j++;
+          k++;
+        }
+
+        for (let idx = 0; idx < merged.length; idx++) {
+          a[l + idx] = merged[idx];
+        }
+
+        steps.push({
+          type: 'merge_special',
+          fullArr: [...a],
+          l: l, m: m, r: r,
+          leftSub: [...L], rightSub: [...R], mergedSub: [...merged],
+          ptrL: i, ptrR: j, ptrMerged: k,
+          phase: 'finish_merge', pass: pass,
+          desc: 'Đã trộn xong và gán ngược về mảng chính tại đoạn [' + l + '..' + r + ']: [' + merged.join(', ') + '].',
+          codeLine: 23,
+          vars: { 'Đoạn vừa trộn xong': 'A[' + l + '..' + r + '] = [' + merged.join(', ') + ']' }
+        });
+      }
+
+      function mergeSortHelper(l, r) {
+        if (l < r) {
+          const m = Math.floor((l + r) / 2);
+          mergeSortHelper(l, m);
+          mergeSortHelper(m + 1, r);
+          merge(l, m, r);
+        }
+      }
+
+      mergeSortHelper(0, a.length - 1);
+
+      steps.push({
+        type: 'merge_special',
+        fullArr: [...a],
+        l: 0, r: a.length - 1, m: -1,
+        leftSub: [], rightSub: [], mergedSub: [...a],
+        ptrL: -1, ptrR: -1, ptrMerged: -1,
+        phase: 'done', pass: pass,
+        desc: '🎉 Hoàn thành Merge Sort! Toàn bộ mảng đã được phân tách và trộn thành dãy tăng dần: [' + a.join(', ') + '].',
+        codeLine: 18,
+        vars: { 'Trạng thái': 'Hoàn tất 100%', 'Mảng hoàn chỉnh': a.join(', ') }
+      });
+
+      return steps;
+    }
+
+    /* ==========================================================================
+       SPECIAL 2: HEAP SORT (DUAL COMPLETE BINARY TREE & ARRAY)
+       ========================================================================== */
+    function generateHeapSortSpecialSteps(origArr) {
+      const a = [...origArr];
+      const n = a.length;
+      const steps = [];
+      let pass = 0;
+
+      steps.push({
+        type: 'heap_special',
+        arr: [...a],
+        heapSize: n,
+        activeParent: -1, activeLeft: -1, activeRight: -1, largest: -1,
+        swapped: [],
+        phase: 'Khởi tạo', pass: 0,
+        desc: 'Bắt đầu Heap Sort. Trực quan hóa song song: Cây nhị phân hoàn chỉnh (trên) và Mảng phân 2 vùng (dưới). Giai đoạn 1: Xây dựng Max-Heap từ dưới lên (heapify).',
+        codeLines: [17, 18, 19],
+        vars: { 'Số phần tử': n, heapSize: n, 'Giai đoạn': '1. Xây dựng Max-Heap' }
+      });
+
+      function heapify(size, i) {
+        let largest = i;
+        const l = 2 * i + 1;
+        const r = 2 * i + 2;
+
+        steps.push({
+          type: 'heap_special',
+          arr: [...a],
+          heapSize: size,
+          activeParent: i, activeLeft: l < size ? l : -1, activeRight: r < size ? r : -1, largest: i,
+          swapped: [],
+          phase: 'Vun đống (Heapify)', pass: ++pass,
+          desc: 'Heapify tại nút cha ' + i + ' (Giá trị: ' + a[i] + '). Nút con trái ' + (l < size ? l + ' (' + a[l] + ')' : '(không có)') + ', con phải ' + (r < size ? r + ' (' + a[r] + ')' : '(không có)') + '.',
+          codeLines: [4, 5, 6, 7, 8, 9],
+          vars: { 'Nút cha i': 'A[' + i + ']=' + a[i], 'Con trái l': l < size ? 'A[' + l + ']=' + a[l] : 'N/A', 'Con phải r': r < size ? 'A[' + r + ']=' + a[r] : 'N/A' }
+        });
+
+        if (l < size && a[l] > a[largest]) largest = l;
+        if (r < size && a[r] > a[largest]) largest = r;
+
+        if (largest !== i) {
+          steps.push({
+            type: 'heap_special',
+            arr: [...a],
+            heapSize: size,
+            activeParent: i, activeLeft: l < size ? l : -1, activeRight: r < size ? r : -1, largest: largest,
+            swapped: [i, largest],
+            phase: 'Hoán vị Vun đống', pass: pass,
+            desc: 'Phát hiện nút con ' + largest + ' (Giá trị: ' + a[largest] + ') > nút cha ' + i + ' (' + a[i] + '). Hoán đổi hai nút trên Cây & Mảng để bảo toàn tính chất Max-Heap!',
+            codeLines: [10, 11, 12],
+            vars: { 'Hoán đổi': 'A[' + i + '] <-> A[' + largest + ']', 'Giá trị mới': a[largest] + ' lên cha, ' + a[i] + ' xuống con' }
+          });
+
+          const temp = a[i]; a[i] = a[largest]; a[largest] = temp;
+          heapify(size, largest);
+        }
+      }
+
+      for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+        heapify(n, i);
+      }
+
+      steps.push({
+        type: 'heap_special',
+        arr: [...a],
+        heapSize: n,
+        activeParent: 0, activeLeft: -1, activeRight: -1, largest: -1,
+        swapped: [],
+        phase: 'Xong Max-Heap', pass: ++pass,
+        desc: '✨ XONG GIAI ĐOẠN 1: Cây đã là Max-Heap hoàn hảo! Gốc A[0]=' + a[0] + ' là phần tử LỚN NHẤT toàn mảng. Chuyển sang Giai đoạn 2: Lần lượt tráo gốc về cuối mảng đã sắp.',
+        codeLines: [20, 21],
+        vars: { 'Gốc Max': a[0], 'Giai đoạn': '2. Trích xuất gốc & Sắp xếp' }
+      });
+
+      for (let i = n - 1; i > 0; i--) {
+        steps.push({
+          type: 'heap_special',
+          arr: [...a],
+          heapSize: i + 1,
+          activeParent: 0, activeLeft: -1, activeRight: -1, largest: i,
+          swapped: [0, i],
+          phase: 'Đổi gốc về cuối', pass: ++pass,
+          desc: 'Pass ' + pass + ': Đổi phần tử lớn nhất A[0]=' + a[0] + ' về vị trí cuối vùng heap A[' + i + ']=' + a[i] + '.',
+          codeLines: [21, 22],
+          vars: { 'Đổi chỗ': 'A[0](' + a[0] + ') <-> A[' + i + '](' + a[i] + ')', 'Vị trí cố định': i }
+        });
+
+        const temp = a[0]; a[0] = a[i]; a[i] = temp;
+
+        steps.push({
+          type: 'heap_special',
+          arr: [...a],
+          heapSize: i,
+          activeParent: -1, activeLeft: -1, activeRight: -1, largest: -1,
+          swapped: [],
+          phase: 'Thu nhỏ vùng Heap', pass: pass,
+          desc: 'Phần tử ' + temp + ' đã vào VÙNG ĐÃ SẮP XẾP (khóa lại, màu xanh lá). Thu nhỏ Vùng Heap còn ' + i + ' phần tử [0..' + (i - 1) + ']. Vun đống lại gốc mới A[0]=' + a[0] + '.',
+          codeLine: 23,
+          vars: { 'Heap size mới': i, 'Phần tử đã khóa': temp }
+        });
+
+        heapify(i, 0);
+      }
+
+      steps.push({
+        type: 'heap_special',
+        arr: [...a],
+        heapSize: 0,
+        activeParent: -1, activeLeft: -1, activeRight: -1, largest: -1,
+        swapped: [],
+        phase: 'Hoàn tất', pass: pass,
+        desc: '🎉 Hoàn thành Heap Sort! Mọi phần tử đều đã được đưa vào Vùng Đã Sắp Xếp tăng dần: [' + a.join(', ') + '].',
+        codeLine: 17,
+        vars: { 'Trạng thái': 'Hoàn tất 100%', 'Mảng tăng dần': a.join(', ') }
+      });
+
+      return steps;
+    }
+
+    /* ==========================================================================
+       SPECIAL 3: QUICK SORT (3-ZONE LOMUTO PARTITION & FLOATING PIVOT)
+       ========================================================================== */
+    function generateQuickSortSpecialSteps(origArr) {
+      const a = [...origArr];
+      const steps = [];
+      let pass = 0;
+
+      steps.push({
+        type: 'quick_special',
+        arr: [...a],
+        low: 0, high: a.length - 1,
+        pivotVal: a[a.length - 1], pivotIdx: a.length - 1,
+        i: -1, j: -1,
+        scanningIdx: -1, swappingPair: [],
+        sortedIndices: [],
+        pass: 0,
+        desc: 'Bắt đầu Quick Sort. Trực quan hóa phân hoạch Lomuto 3 phân vùng: Vùng < Pivot (Xanh lam), Vùng ≥ Pivot (Cam) và Vùng Chưa Xét (Xám) với Hộp Pivot nổi bật.',
+        codeLines: [18, 19, 20],
+        vars: { 'Phạm vi': '[0..' + (a.length - 1) + ']', 'Số phần tử': a.length }
+      });
+
+      const sortedSet = new Set();
+
+      function partition(low, high) {
+        pass++;
+        const pivot = a[high];
+        let i = low - 1;
+
+        steps.push({
+          type: 'quick_special',
+          arr: [...a],
+          low: low, high: high,
+          pivotVal: pivot, pivotIdx: high,
+          i: i, j: low,
+          scanningIdx: -1, swappingPair: [],
+          sortedIndices: Array.from(sortedSet),
+          pass: pass,
+          desc: '--- PASS ' + pass + ': Phân hoạch đoạn [' + low + '..' + high + ']. CHỌN PIVOT = A[' + high + '] = ' + pivot + '. Khởi tạo ranh giới i = ' + i + '.',
+          codeLines: [4, 5, 6],
+          vars: { 'Đoạn phân hoạch': '[' + low + '..' + high + ']', PIVOT: pivot, 'Ranh giới i': i, 'Con trỏ j': low }
+        });
+
+        for (let j = low; j < high; j++) {
+          const isLess = a[j] < pivot;
+          steps.push({
+            type: 'quick_special',
+            arr: [...a],
+            low: low, high: high,
+            pivotVal: pivot, pivotIdx: high,
+            i: i, j: j,
+            scanningIdx: j, swappingPair: [],
+            sortedIndices: Array.from(sortedSet),
+            pass: pass,
+            desc: 'Quét phần tử A[' + j + '] = ' + a[j] + ': So sánh với PIVOT (' + pivot + '). ' + (isLess ? 'A['+j+'] < PIVOT -> Cần đưa vào Vùng Xanh (< Pivot).' : 'A['+j+'] ≥ PIVOT -> Nằm trong Vùng Cam (≥ Pivot).'),
+            codeLines: [7, 8],
+            vars: { 'Quét j': j, 'A[j]': a[j], PIVOT: pivot, 'Phân loại': isLess ? '< PIVOT' : '≥ PIVOT' }
+          });
+
+          if (isLess) {
+            i++;
+            const temp = a[i]; a[i] = a[j]; a[j] = temp;
+            steps.push({
+              type: 'quick_special',
+              arr: [...a],
+              low: low, high: high,
+              pivotVal: pivot, pivotIdx: high,
+              i: i, j: j,
+              scanningIdx: j, swappingPair: [i, j],
+              sortedIndices: Array.from(sortedSet),
+              pass: pass,
+              desc: 'Tăng ranh giới i lên ' + i + '. Hoán đổi A[' + i + '] với A[' + j + '] để mở rộng Vùng Xanh (< Pivot).',
+              codeLines: [9, 10],
+              vars: { 'Mở rộng Vùng Xanh': 'Đoạn [' + low + '..' + i + ']', 'Hoán vị': 'A[' + i + '] <-> A[' + j + ']', 'Ranh giới i': i }
+            });
+          }
+        }
+
+        const pi = i + 1;
+        const temp = a[pi]; a[pi] = a[high]; a[high] = temp;
+        sortedSet.add(pi);
+
+        steps.push({
+          type: 'quick_special',
+          arr: [...a],
+          low: low, high: high,
+          pivotVal: pivot, pivotIdx: pi,
+          i: i, j: high,
+          scanningIdx: pi, swappingPair: [pi, high],
+          sortedIndices: Array.from(sortedSet),
+          pass: pass,
+          desc: '🎯 ĐƯA PIVOT VỀ VỊ TRÍ CHUẨN: Hoán đổi Pivot A[' + high + '] với A[' + pi + ']. Chốt vị trí cố định của ' + pivot + ' tại index ' + pi + ' (Tô màu Xanh lá)! Mọi phần tử bên trái <= ' + pivot + ', bên phải >= ' + pivot + '.',
+          codeLines: [13, 14],
+          vars: { 'Pivot chốt tại': pi, 'Giá trị': pivot, 'Vế trái <': '[' + low + '..' + (pi - 1) + ']', 'Vế phải ≥': '[' + (pi + 1) + '..' + high + ']' }
+        });
+
+        return pi;
+      }
+
+      function quickSortHelper(low, high) {
+        if (low < high) {
+          const pi = partition(low, high);
+          quickSortHelper(low, pi - 1);
+          quickSortHelper(pi + 1, high);
+        } else if (low === high) {
+          sortedSet.add(low);
+        }
+      }
+
+      quickSortHelper(0, a.length - 1);
+
+      steps.push({
+        type: 'quick_special',
+        arr: [...a],
+        low: 0, high: a.length - 1,
+        pivotVal: null, pivotIdx: -1,
+        i: a.length - 1, j: a.length - 1,
+        scanningIdx: -1, swappingPair: [],
+        sortedIndices: a.map((_, idx) => idx),
+        pass: pass,
+        desc: '🎉 Hoàn thành Quick Sort! Mọi đoạn phân hoạch đã hoàn tất, mảng đã có thứ tự tăng dần hoàn chỉnh: [' + a.join(', ') + '].',
+        codeLine: 18,
+        vars: { 'Trạng thái': 'Hoàn tất 100%', 'Mảng đã sắp': a.join(', ') }
+      });
+
+      return steps;
+    }
+
+    /* LINKED LIST, STACK, QUEUE, TREE, HASH GENERATORS */
+    function generateLinkedListSteps(algo, valToInsertOrDelete) {
+      const steps = [];
+
+      if (algo === 'singly_traverse') {
+        const nodes = [10, 20, 30, 40, 50];
+        steps.push({
+          type: 'linkedlist', nodes: [...nodes], activeIdx: -1, pass: 0,
+          desc: 'Khởi tạo duyệt danh sách liên kết đơn. Con trỏ current = head.',
+          codeLines: [10, 11], vars: { current: 'head (Node 10)', inRa: 'Chưa in' }
+        });
+
+        let out = [];
+        for (let i = 0; i < nodes.length; i++) {
+          out.push(nodes[i]);
+          steps.push({
+            type: 'linkedlist', nodes: [...nodes], activeIdx: i, pass: i + 1,
+            desc: 'Pass ' + (i + 1) + ': current đang trỏ tới Node có giá trị ' + nodes[i] + '. In ra màn hình.',
+            codeLines: [12, 13, 14], vars: { current: 'Node[' + i + ']', 'current->data': nodes[i], inRa: out.join(' -> ') }
+          });
+        }
+
+        steps.push({
+          type: 'linkedlist', nodes: [...nodes], activeIdx: nodes.length, pass: nodes.length + 1,
+          desc: 'current đã trỏ tới nullptr. Kết thúc duyệt danh sách!',
+          codeLine: 16, vars: { current: 'nullptr', 'Kết quả in xong': out.join(' -> ') + ' -> NULL' }
+        });
+      }
+      else if (algo === 'singly_sorted_insert') {
+        const nodes = [10, 20, 30, 40];
+        const val = valToInsertOrDelete || 25;
+
+        steps.push({
+          type: 'linkedlist', nodes: [...nodes], newNode: val, activeIdx: -1, pass: 0,
+          desc: 'Tạo newNode chứa giá trị ' + val + '. Cần chèn vào danh sách đã có thứ tự: [' + nodes.join(' -> ') + '].',
+          codeLines: [10, 11], vars: { 'newNode->data': val, head: 'Node(10)' }
+        });
+
+        let insertIdx = nodes.length;
+        for (let i = 0; i < nodes.length; i++) {
+          steps.push({
+            type: 'linkedlist', nodes: [...nodes], newNode: val, activeIdx: i, pass: i + 1,
+            desc: 'Kiểm tra tại Node ' + nodes[i] + '. So sánh xem ' + val + ' có nhỏ hơn nút tiếp theo không.',
+            codeLines: [17, 18, 19], vars: { 'cur->data': nodes[i], 'newNode->data': val }
+          });
+          if (val < nodes[i]) {
+            insertIdx = i;
+            break;
+          }
+        }
+
+        const newNodes = [...nodes];
+        newNodes.splice(insertIdx, 0, val);
+
+        steps.push({
+          type: 'linkedlist', nodes: newNodes, activeIdx: insertIdx, newNode: null, pass: insertIdx + 1,
+          desc: 'Gán liên kết: newNode->next = cur->next; cur->next = newNode;. Chèn thành công ' + val + '!',
+          codeLines: [21, 22], vars: { 'Trạng thái': 'Đã chèn ' + val + ' vào đúng thứ tự', 'DS mới': newNodes.join(' -> ') }
+        });
+      }
+      else if (algo === 'singly_delete') {
+        const nodes = [10, 20, 30, 40];
+        const val = valToInsertOrDelete || 20;
+
+        steps.push({
+          type: 'linkedlist', nodes: [...nodes], activeIdx: -1, pass: 0,
+          desc: 'Bắt đầu tìm kiếm và xóa Node có giá trị ' + val + '.',
+          codeLines: [10, 11], vars: { 'Khóa cần xóa': val }
+        });
+
+        const targetIdx = nodes.indexOf(val);
+        if (targetIdx !== -1) {
+          for (let i = 0; i <= targetIdx; i++) {
+            steps.push({
+              type: 'linkedlist', nodes: [...nodes], activeIdx: i, pass: i + 1,
+              desc: 'Duyệt đến Node ' + nodes[i] + '. So sánh: ' + nodes[i] + ' == ' + val + ' ?',
+              codeLines: [17, 18, 19], vars: { 'cur->data': nodes[i], 'Trùng khớp': nodes[i] === val ? 'CÓ' : 'KHÔNG' }
+            });
+          }
+
+          const remNodes = nodes.filter(x => x !== val);
+          steps.push({
+            type: 'linkedlist', nodes: remNodes, activeIdx: -1, pass: targetIdx + 2,
+            desc: 'Đã ngắt liên kết và giải phóng bộ nhớ của Node ' + val + '. Danh sách còn lại: [' + remNodes.join(' -> ') + '].',
+            codeLines: [22, 23], vars: { 'Đã giải phóng': 'Node(' + val + ')', 'DS mới': remNodes.join(' -> ') }
+          });
+        }
+      }
+      else if (algo === 'singly_recursive_reverse') {
+        const nodes = [12, 24, 36, 48];
+        steps.push({
+          type: 'linkedlist', nodes: [...nodes], activeIdx: -1, pass: 0,
+          desc: 'Gọi hàm đệ quy printReverse(head). Mỗi lời gọi hàm được đẩy vào Call Stack cho đến khi gặp nullptr.',
+          codeLines: [10, 11], vars: { 'Call Stack': '[]', 'In ra': 'Chưa in' }
+        });
+
+        const stackTrace = [];
+        for (let i = 0; i < nodes.length; i++) {
+          stackTrace.push('printReverse(' + nodes[i] + ')');
+          steps.push({
+            type: 'linkedlist', nodes: [...nodes], activeIdx: i, pass: i + 1,
+            desc: 'Gọi đệ quy: printReverse(Node ' + nodes[i] + '). Đẩy vào Call Stack.',
+            codeLines: [11, 12], vars: { 'Call Stack': '[' + stackTrace.join(', ') + ']', node: nodes[i] }
+          });
+        }
+
+        const printed = [];
+        for (let i = nodes.length - 1; i >= 0; i--) {
+          stackTrace.pop();
+          printed.push(nodes[i]);
+          steps.push({
+            type: 'linkedlist', nodes: [...nodes], activeIdx: i, pass: nodes.length + (nodes.length - i),
+            desc: 'Quay lui Call Stack: In giá trị Node ' + nodes[i] + ' khi thoát hàm con.',
+            codeLine: 13, vars: { 'Call Stack': '[' + stackTrace.join(', ') + ']', 'Dãy in ra (Đảo ngược)': printed.join(' ') }
+          });
+        }
+      }
+      else if (algo === 'doubly_list') {
+        const nodes = [15, 30, 45];
+        steps.push({
+          type: 'doubly_linkedlist', nodes: [...nodes], activeIdx: -1, pass: 0,
+          desc: 'Danh sách liên kết đôi: Mỗi Node có 2 con trỏ: prev (trỏ về trước) và next (trỏ về sau).',
+          codeLines: [3, 4, 5, 6, 7], vars: { 'Loại danh sách': 'Doubly Linked List (2 chiều)' }
+        });
+
+        const newNodes = [15, 30, 99, 45];
+        steps.push({
+          type: 'doubly_linkedlist', nodes: newNodes, activeIdx: 2, pass: 1,
+          desc: 'Thao tác Chèn Node(99) vào sau Node(30): Cập nhật 4 liên kết (newNode->prev, newNode->next, prevNode->next, nextNode->prev).',
+          codeLines: [11, 12, 13, 14, 15], vars: { 'Nút mới': 'Node(99)', 'Chèn sau': 'Node(30)' }
+        });
+      }
+      return steps;
+    }
+
+    function generateStackQueueSteps(algo) {
+      const steps = [];
+
+      if (algo === 'stack_adt') {
+        const actions = [
+          { type: 'push', val: 10 },
+          { type: 'push', val: 20 },
+          { type: 'push', val: 30 },
+          { type: 'pop' },
+          { type: 'push', val: 40 },
+          { type: 'peek' }
+        ];
+
+        let stack = [];
+        steps.push({
+          type: 'stack', stack: [], pass: 0,
+          desc: 'Khởi tạo Stack rỗng. Chỉ số top = -1. Cơ chế LIFO.',
+          codeLines: [5, 6], vars: { top: -1, isEmpty: 'true' }
+        });
+
+        actions.forEach((act, idx) => {
+          if (act.type === 'push') {
+            stack.push(act.val);
+            steps.push({
+              type: 'stack', stack: [...stack], pass: idx + 1,
+              desc: 'Thực hiện PUSH(' + act.val + '): Đưa giá trị ' + act.val + ' vào đỉnh Stack. Cập nhật top = ' + (stack.length - 1) + '.',
+              codeLines: [7, 8], vars: { top: stack.length - 1, 'Top element': act.val, Hành_động: 'Push ' + act.val }
+            });
+          } else if (act.type === 'pop') {
+            const popped = stack.pop();
+            steps.push({
+              type: 'stack', stack: [...stack], pass: idx + 1,
+              desc: 'Thực hiện POP(): Lấy phần tử ' + popped + ' ra khỏi đỉnh Stack.',
+              codeLine: 10, vars: { top: stack.length - 1, 'Đã lấy ra': popped, Hành_động: 'Pop' }
+            });
+          } else if (act.type === 'peek') {
+            steps.push({
+              type: 'stack', stack: [...stack], pass: idx + 1,
+              desc: 'Thực hiện PEEK / TOP: Xem giá trị đỉnh hiện tại là ' + stack[stack.length - 1] + '.',
+              codeLines: [9, 11], vars: { top: stack.length - 1, 'Đỉnh Stack': stack[stack.length - 1] }
+            });
+          }
+        });
+      }
+      else if (algo === 'rpn_calculator') {
+        const tokens = ['5', '3', '+', '2', '*', '4', '-'];
+        const stack = [];
+
+        steps.push({
+          type: 'rpn', tokens: tokens, tokenIdx: -1, stack: [], pass: 0,
+          desc: 'Bắt đầu tính biểu thức Hậu tố (RPN): "' + tokens.join(' ') + '". Khởi tạo Stack lưu toán hạng.',
+          codeLines: [6, 7], vars: { 'Biểu thức RPN': tokens.join(' '), 'Stack': '[]' }
+        });
+
+        tokens.forEach((tok, idx) => {
+          if (['+', '-', '*', '/'].includes(tok)) {
+            const b = stack.pop();
+            const a = stack.pop();
+            let res = 0;
+            if (tok === '+') res = a + b;
+            else if (tok === '-') res = a - b;
+            else if (tok === '*') res = a * b;
+            else if (tok === '/') res = Math.floor(a / b);
+            stack.push(res);
+
+            steps.push({
+              type: 'rpn', tokens: tokens, tokenIdx: idx, stack: [...stack], pass: idx + 1,
+              desc: 'Đọc toán tử "' + tok + '": Pop 2 toán hạng b=' + b + ', a=' + a + '. Tính ' + a + ' ' + tok + ' ' + b + ' = ' + res + '. Push ' + res + ' trở lại Stack.',
+              codeLines: [9, 10, 11, 12, 13, 14, 15], vars: { 'Toán tử': tok, 'a': a, 'b': b, 'Kết quả phép tính': res, 'Stack': '[' + stack.join(', ') + ']' }
+            });
+          } else {
+            stack.push(parseInt(tok));
+            steps.push({
+              type: 'rpn', tokens: tokens, tokenIdx: idx, stack: [...stack], pass: idx + 1,
+              desc: 'Đọc toán hạng "' + tok + '": Push ' + tok + ' vào Stack.',
+              codeLine: 16, vars: { 'Đọc số': tok, 'Stack': '[' + stack.join(', ') + ']' }
+            });
+          }
+        });
+
+        steps.push({
+          type: 'rpn', tokens: tokens, tokenIdx: tokens.length - 1, stack: [...stack], pass: tokens.length + 1,
+          desc: '🎉 Hoàn thành tính biểu thức RPN! Kết quả cuối cùng trên đỉnh Stack là: ' + stack[0] + '.',
+          codeLine: 18, vars: { 'KẾT QUẢ CUỐI CÙNG': stack[0] }
+        });
+      }
+      else if (algo === 'queue_adt') {
+        const queue = [10, 20, 30];
+        steps.push({
+          type: 'queue', queue: [...queue], pass: 0,
+          desc: 'Khởi tạo Queue (FIFO). Phần tử vào ở Rear, lấy ra ở Front.',
+          codeLines: [5, 6], vars: { Front: queue[0], Rear: queue[queue.length - 1], Size: queue.length }
+        });
+
+        queue.push(40);
+        steps.push({
+          type: 'queue', queue: [...queue], pass: 1,
+          desc: 'Thực hiện ENQUEUE(40): Thêm phần tử 40 vào vị trí Rear của hàng đợi.',
+          codeLines: [7, 8], vars: { 'Đã thêm': 40, Rear: 40, Size: queue.length }
+        });
+
+        const dequeued = queue.shift();
+        steps.push({
+          type: 'queue', queue: [...queue], pass: 2,
+          desc: 'Thực hiện DEQUEUE(): Lấy phần tử ' + dequeued + ' ra khỏi vị trí Front.',
+          codeLine: 10, vars: { 'Đã lấy ra': dequeued, 'Front mới': queue[0], Size: queue.length }
+        });
+      }
+      return steps;
+    }
+
+    function generateTreeSteps(algo) {
+      const steps = [];
+
+      if (algo === 'bst_operations') {
+        const treeData = {
+          val: 50,
+          left: { val: 30, left: { val: 20 }, right: { val: 40 } },
+          right: { val: 70, left: { val: 60 }, right: { val: 80 } }
+        };
+
+        steps.push({
+          type: 'tree', treeData: treeData, activeVal: null, pass: 0,
+          desc: 'Cây nhị phân tìm kiếm (BST): Nhánh trái < Nút gốc < Nhánh phải.',
+          codeLines: [3, 4, 5, 6], vars: { Root: 50, 'Chiều cao': 3 }
+        });
+
+        const searchPath = [50, 30, 40];
+        searchPath.forEach((v, idx) => {
+          steps.push({
+            type: 'tree', treeData: treeData, activeVal: v, pass: idx + 1,
+            desc: 'Tìm kiếm X = 40: Đang xét nút ' + v + '. ' + (v === 40 ? 'Đã tìm thấy!' : (40 < v ? '40 < ' + v + ' -> Rẽ nhánh TRÁI' : '40 > ' + v + ' -> Rẽ nhánh PHẢI')),
+            codeLines: [17, 18, 19, 20, 21], vars: { 'Đang xét': v, Target: 40, 'Hành động': v === 40 ? 'Tìm thấy' : (40 < v ? 'Rẽ trái' : 'Rẽ phải') }
+          });
+        });
+
+        steps.push({
+          type: 'tree', treeData: treeData, activeVal: 20, pass: 4,
+          desc: 'Thao tác Tìm Min (findMin): Đi tận cùng sang nhánh trái nhất -> Nút 20 là Min.',
+          codeLine: 20, vars: { 'Nút Min': 20, 'Vị trí': 'Tận cùng nhánh trái' }
+        });
+      }
+      else if (algo === 'bst_traversals') {
+        const tree = {
+          val: 50,
+          left: { val: 30, left: { val: 20 }, right: { val: 40 } },
+          right: { val: 70, left: { val: 60 }, right: { val: 80 } }
+        };
+        const inorderSeq = [20, 30, 40, 50, 60, 70, 80];
+        let printed = [];
+
+        steps.push({
+          type: 'tree', treeData: tree, activeVal: null, pass: 0,
+          desc: 'Duyệt trung thứ tự In-order (Trái - Gốc - Phải). In-order của BST luôn cho dãy tăng dần!',
+          codeLines: [10, 11], vars: { 'Thứ tự': 'L - N - R', 'Dãy đã in': '[]' }
+        });
+
+        inorderSeq.forEach((val, idx) => {
+          printed.push(val);
+          steps.push({
+            type: 'tree', treeData: tree, activeVal: val, pass: idx + 1,
+            desc: 'Duyệt In-order tới nút ' + val + '. Xuất ' + val + ' ra dãy kết quả.',
+            codeLines: [12, 13, 14], vars: { 'Nút hiện tại': val, 'Dãy In-order tăng dần': printed.join(' -> ') }
+          });
+        });
+      }
+      else if (algo === 'avl_tree') {
+        steps.push({
+          type: 'avl_tree',
+          treeData: {
+            val: 30, bf: 2,
+            left: { val: 20, bf: 1, left: { val: 10, bf: 0 } }
+          },
+          activeVal: 30, pass: 1,
+          desc: 'Chèn 10 vào cây: Nút 30 có Hệ số cân bằng BF = h(Trái) - h(Phải) = 2 - 0 = +2 (> 1) -> MẤT CÂN BẰNG Trái - Trái (LL).',
+          codeLine: 11, vars: { 'Nút mất cân bằng': 30, 'Balance Factor BF': '+2', 'Trường hợp': 'Left-Left (LL)' }
+        });
+
+        steps.push({
+          type: 'avl_tree',
+          treeData: {
+            val: 20, bf: 0,
+            left: { val: 10, bf: 0 },
+            right: { val: 30, bf: 0 }
+          },
+          activeVal: 20, pass: 2,
+          desc: 'Áp dụng phép Quay Phải Đơn (Right Rotate) tại nút 30: Nút 20 trở thành gốc mới. Cây đã CÂN BẰNG hoàn hảo (BF = 0)!',
+          codeLines: [12, 13, 14, 15, 16, 17], vars: { 'Gốc mới': 20, 'BF(20)': 0, 'BF(10)': 0, 'BF(30)': 0, 'Kết quả': 'Đã cân bằng' }
+        });
+      }
+      return steps;
+    }
+
+    function generateHashTableSteps(algo) {
+      const steps = [];
+      const keys = [15, 22, 29, 36, 12];
+      const M = 7;
+
+      if (algo === 'hash_chaining') {
+        let buckets = Array.from({ length: M }, () => []);
+
+        steps.push({
+          type: 'hash_chaining', M: M, buckets: JSON.parse(JSON.stringify(buckets)), pass: 0,
+          desc: 'Khởi tạo Bảng Băm Chaining kích thước M = ' + M + '. Hàm băm h(k) = k % ' + M + '.',
+          codeLines: [8, 9, 10], vars: { M: M, 'Hàm băm': 'k % 7' }
+        });
+
+        keys.forEach((key, idx) => {
+          const slot = key % M;
+          const isCollision = buckets[slot].length > 0;
+          buckets[slot].push(key);
+
+          steps.push({
+            type: 'hash_chaining', M: M, buckets: JSON.parse(JSON.stringify(buckets)), highlightSlot: slot, pass: idx + 1,
+            desc: 'Chèn khóa ' + key + ': Tính h(' + key + ') = ' + key + ' % ' + M + ' = ' + slot + '. ' + (isCollision ? '⚠️ XẢY RA ĐỤNG ĐỘ! Thêm vào danh sách liên kết tại bucket ' + slot : 'Không đụng độ. Lưu trực tiếp vào bucket ' + slot) + '.',
+            codeLines: [11, 12, 13], vars: { Khóa: key, Bucket: slot, 'Đụng độ': isCollision ? 'CÓ (Chaining giải quyết)' : 'KHÔNG' }
+          });
+        });
+      }
+      else if (algo === 'hash_linear_probing') {
+        const table = Array(M).fill(null);
+
+        steps.push({
+          type: 'hash_linear', M: M, table: [...table], pass: 0,
+          desc: 'Khởi tạo Bảng băm Định địa chỉ mở (Linear Probing) kích thước M = ' + M + '. Khi đụng độ, thăm dò ô tiếp theo: (idx + 1) % M.',
+          codeLines: [8, 9], vars: { M: M, 'Loại': 'Linear Probing' }
+        });
+
+        keys.forEach((key, idx) => {
+          let slot = key % M;
+          let probed = 0;
+          let desc = 'Chèn khóa ' + key + ': h(' + key + ') = ' + slot + '. ';
+
+          while (table[slot] !== null) {
+            probed++;
+            desc += 'Ô ' + slot + ' đã có số ' + table[slot] + ' (Đụng độ!). Thăm dò tiếp ô ' + ((slot + 1) % M) + '... ';
+            slot = (slot + 1) % M;
+          }
+          table[slot] = key;
+          desc += 'Lưu ' + key + ' vào ô trống ' + slot + '.';
+
+          steps.push({
+            type: 'hash_linear', M: M, table: [...table], highlightSlot: slot, pass: idx + 1,
+            desc: desc, codeLines: [10, 11, 12, 13, 14], vars: { Khóa: key, 'Ô chốt': slot, 'Số bước thăm dò': probed }
+          });
+        });
+      }
+      return steps;
+    }
+
+    /* RENDERER DISPATCHER */
+    function renderStep(step) {
+      if (!step) return;
+
+      DOM.passBadge.textContent = 'Pass ' + (step.pass !== undefined ? step.pass : '-');
+      DOM.explanationText.innerHTML = step.desc || '';
+
+      DOM.varTableBody.innerHTML = '';
+      if (step.vars) {
+        for (const [k, v] of Object.entries(step.vars)) {
+          const row = document.createElement('tr');
+          row.innerHTML = '<td>' + k + '</td><td>' + v + '</td>';
+          DOM.varTableBody.appendChild(row);
+        }
+      }
+
+      const codeLinesElements = DOM.codeContainer.querySelectorAll('.code-line');
+      codeLinesElements.forEach(cl => cl.classList.remove('active'));
+
+      const activeLines = [];
+      if (Array.isArray(step.codeLines)) {
+        activeLines.push(...step.codeLines);
+      } else if (Array.isArray(step.codeLine)) {
+        activeLines.push(...step.codeLine);
+      } else if (step.codeLine !== undefined && step.codeLine >= 0) {
+        activeLines.push(step.codeLine);
+      }
+
+      activeLines.forEach(lineIdx => {
+        if (codeLinesElements[lineIdx]) {
+          codeLinesElements[lineIdx].classList.add('active');
+        }
+      });
+
+      if (activeLines.length > 0 && codeLinesElements[activeLines[0]]) {
+        codeLinesElements[activeLines[0]].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+
+      DOM.stageCanvas.innerHTML = '';
+
+      if (step.type === 'merge_special') {
+        renderMergeSortSpecial(step);
+      } else if (step.type === 'heap_special') {
+        renderHeapSortSpecial(step);
+      } else if (step.type === 'quick_special') {
+        renderQuickSortSpecial(step);
+      } else if (step.type === 'array') {
+        renderArrayBars(step);
+      } else if (step.type === 'linkedlist') {
+        renderLinkedList(step);
+      } else if (step.type === 'doubly_linkedlist') {
+        renderDoublyLinkedList(step);
+      } else if (step.type === 'stack') {
+        renderStack(step);
+      } else if (step.type === 'rpn') {
+        renderRPN(step);
+      } else if (step.type === 'queue') {
+        renderQueue(step);
+      } else if (step.type === 'tree' || step.type === 'avl_tree') {
+        renderTree(step);
+      } else if (step.type === 'hash_chaining' || step.type === 'hash_linear') {
+        renderHashTable(step);
+      }
+    }
+
+    /* SPECIAL RENDERER 1: MERGE SORT SPECIAL RACK */
+    function renderMergeSortSpecial(step) {
+      const container = document.createElement('div');
+      container.className = 'merge-rack-container';
+
+      const fullBarWrapper = document.createElement('div');
+      fullBarWrapper.style.display = 'flex';
+      fullBarWrapper.style.flexDirection = 'column';
+      fullBarWrapper.style.alignItems = 'center';
+      fullBarWrapper.style.gap = '6px';
+
+      const fullBarTitle = document.createElement('div');
+      fullBarTitle.style.fontSize = '0.78rem';
+      fullBarTitle.style.color = 'var(--text-muted)';
+      fullBarTitle.textContent = 'Mảng tổng thể (Đoạn đang xét: [' + step.l + '..' + step.r + '])';
+      fullBarWrapper.appendChild(fullBarTitle);
+
+      const fullBar = document.createElement('div');
+      fullBar.className = 'merge-full-bar';
+
+      step.fullArr.forEach((val, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'merge-full-chip';
+        if (idx >= step.l && idx <= step.r) chip.classList.add('active-range');
+        chip.textContent = val;
+        fullBar.appendChild(chip);
+      });
+      fullBarWrapper.appendChild(fullBar);
+      container.appendChild(fullBarWrapper);
+
+      if (step.leftSub && step.leftSub.length > 0) {
+        const subRack = document.createElement('div');
+        subRack.className = 'merge-sub-rack';
+
+        const leftBox = document.createElement('div');
+        leftBox.className = 'merge-sub-box left-box';
+        leftBox.innerHTML = '<div class="merge-sub-title" style="color:#38bdf8;">⬅ Mảng con Trái [' + step.l + '..' + step.m + ']</div>';
+
+        const leftRow = document.createElement('div');
+        leftRow.className = 'merge-elements-row';
+        step.leftSub.forEach((val, idx) => {
+          const card = document.createElement('div');
+          card.className = 'merge-elem-card';
+          if (idx === step.ptrL && step.phase === 'compare') card.classList.add('active-ptr');
+          else if (idx < step.ptrL) card.classList.add('taken');
+          card.textContent = val;
+          leftRow.appendChild(card);
+        });
+        leftBox.appendChild(leftRow);
+        subRack.appendChild(leftBox);
+
+        const vsBadge = document.createElement('div');
+        vsBadge.className = 'merge-vs-badge';
+        vsBadge.textContent = 'VS';
+        subRack.appendChild(vsBadge);
+
+        const rightBox = document.createElement('div');
+        rightBox.className = 'merge-sub-box right-box';
+        rightBox.innerHTML = '<div class="merge-sub-title" style="color:#f59e0b;">Mảng con Phải [' + (step.m + 1) + '..' + step.r + '] ➡</div>';
+
+        const rightRow = document.createElement('div');
+        rightRow.className = 'merge-elements-row';
+        step.rightSub.forEach((val, idx) => {
+          const card = document.createElement('div');
+          card.className = 'merge-elem-card';
+          if (idx === step.ptrR && step.phase === 'compare') card.classList.add('active-ptr-r');
+          else if (idx < step.ptrR) card.classList.add('taken');
+          card.textContent = val;
+          rightRow.appendChild(card);
+        });
+        rightBox.appendChild(rightRow);
+        subRack.appendChild(rightBox);
+
+        container.appendChild(subRack);
+
+        const targetRack = document.createElement('div');
+        targetRack.className = 'merge-target-rack';
+        targetRack.innerHTML = '<div class="merge-target-title">⬇ Mảng Đích Đang Trộn (Merged Subarray [' + step.l + '..' + step.r + '])</div>';
+
+        const targetRow = document.createElement('div');
+        targetRow.className = 'merge-elements-row';
+        step.mergedSub.forEach((val) => {
+          const card = document.createElement('div');
+          card.className = 'merge-elem-card';
+          if (val !== null) {
+            card.style.background = 'linear-gradient(135deg, #059669, #10b981)';
+            card.style.color = '#fff';
+            card.style.borderColor = '#34d399';
+            card.textContent = val;
+          } else {
+            card.style.background = 'rgba(255,255,255,0.03)';
+            card.style.borderStyle = 'dashed';
+            card.style.borderColor = '#475569';
+            card.textContent = '_';
+          }
+          targetRow.appendChild(card);
+        });
+        targetRack.appendChild(targetRow);
+        container.appendChild(targetRack);
+      }
+
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    /* SPECIAL RENDERER 2: HEAP SORT DUAL TREE & ARRAY */
+    function renderHeapSortSpecial(step) {
+      const container = document.createElement('div');
+      container.className = 'heap-dual-container';
+
+      const treeArea = document.createElement('div');
+      treeArea.className = 'heap-tree-area';
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 700 240');
+      svg.style.width = '100%';
+      svg.style.height = '100%';
+
+      const n = step.arr.length;
+      const coords = [];
+
+      for (let i = 0; i < n; i++) {
+        const depth = Math.floor(Math.log2(i + 1));
+        const posInDepth = i - (Math.pow(2, depth) - 1);
+        const totalInDepth = Math.pow(2, depth);
+        const x = (posInDepth + 0.5) * (700 / totalInDepth);
+        const y = 35 + depth * 55;
+        coords.push({ x, y, depth });
+      }
+
+      for (let i = 1; i < n; i++) {
+        const parentIdx = Math.floor((i - 1) / 2);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', coords[parentIdx].x);
+        line.setAttribute('y1', coords[parentIdx].y);
+        line.setAttribute('x2', coords[i].x);
+        line.setAttribute('y2', coords[i].y);
+        line.setAttribute('class', 'tree-link');
+        if (i >= step.heapSize) line.style.opacity = '0.2';
+        svg.appendChild(line);
+      }
+
+      for (let i = 0; i < n; i++) {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'tree-node');
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', coords[i].x);
+        circle.setAttribute('cy', coords[i].y);
+        circle.setAttribute('r', 18);
+
+        const inHeap = i < step.heapSize;
+        const isSwapped = step.swapped && step.swapped.includes(i);
+        const isParent = i === step.activeParent;
+        const isChild = (i === step.activeLeft || i === step.activeRight);
+
+        if (!inHeap) {
+          circle.style.fill = '#064e3b';
+          circle.style.stroke = '#10b981';
+          circle.style.strokeWidth = '2';
+        } else if (isSwapped) {
+          circle.style.fill = '#b91c1c';
+          circle.style.stroke = '#f87171';
+          circle.style.strokeWidth = '3';
+        } else if (isParent) {
+          circle.style.fill = '#d97706';
+          circle.style.stroke = '#fbbf24';
+          circle.style.strokeWidth = '3';
+        } else if (isChild) {
+          circle.style.fill = '#7e22ce';
+          circle.style.stroke = '#c084fc';
+          circle.style.strokeWidth = '3';
+        } else {
+          circle.style.fill = '#0f172a';
+          circle.style.stroke = '#38bdf8';
+          circle.style.strokeWidth = '2.5';
+        }
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', coords[i].x);
+        text.setAttribute('y', coords[i].y);
+        text.style.fontSize = '12px';
+        text.style.fontWeight = 'bold';
+        text.textContent = step.arr[i];
+
+        const idxText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        idxText.setAttribute('x', coords[i].x);
+        idxText.setAttribute('y', coords[i].y + 24);
+        idxText.style.fontSize = '9px';
+        idxText.style.fill = 'var(--text-muted)';
+        idxText.textContent = '[' + i + ']';
+
+        g.appendChild(circle);
+        g.appendChild(text);
+        g.appendChild(idxText);
+        svg.appendChild(g);
+      }
+
+      treeArea.appendChild(svg);
+      container.appendChild(treeArea);
+
+      const arrayPartition = document.createElement('div');
+      arrayPartition.className = 'heap-array-partition';
+
+      const tagHeap = document.createElement('div');
+      tagHeap.className = 'heap-zone-tag';
+      tagHeap.style.background = 'rgba(56, 189, 248, 0.2)';
+      tagHeap.style.color = '#38bdf8';
+      tagHeap.textContent = 'VÙNG HEAP [0..' + Math.max(0, step.heapSize - 1) + ']';
+      arrayPartition.appendChild(tagHeap);
+
+      step.arr.forEach((val, idx) => {
+        if (idx === step.heapSize && step.heapSize < n && step.heapSize > 0) {
+          const divLine = document.createElement('div');
+          divLine.className = 'heap-divider';
+          divLine.title = 'Ranh giới Vùng Heap và Vùng Đã Sắp Xếp';
+          arrayPartition.appendChild(divLine);
+
+          const tagSorted = document.createElement('div');
+          tagSorted.className = 'heap-zone-tag';
+          tagSorted.style.background = 'rgba(16, 185, 129, 0.2)';
+          tagSorted.style.color = '#34d399';
+          tagSorted.textContent = 'VÙNG ĐÃ SẮP [' + step.heapSize + '..' + (n - 1) + ']';
+          arrayPartition.appendChild(tagSorted);
+        }
+
+        const cell = document.createElement('div');
+        cell.className = 'heap-cell';
+
+        const inHeap = idx < step.heapSize;
+        const isSwapped = step.swapped && step.swapped.includes(idx);
+        const isParent = idx === step.activeParent;
+        const isChild = (idx === step.activeLeft || idx === step.activeRight);
+
+        if (!inHeap) cell.classList.add('in-sorted');
+        else if (isSwapped) cell.classList.add('swapping-node');
+        else if (isParent) cell.classList.add('parent-node');
+        else if (isChild) cell.classList.add('child-node');
+        else cell.classList.add('in-heap');
+
+        cell.innerHTML = '<span>' + val + '</span><span style="font-size:0.7rem; opacity:0.7;">[' + idx + ']</span>';
+        arrayPartition.appendChild(cell);
+      });
+
+      container.appendChild(arrayPartition);
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    /* SPECIAL RENDERER 3: QUICK SORT 3-ZONE LOMUTO & FLOATING PIVOT */
+    function renderQuickSortSpecial(step) {
+      const container = document.createElement('div');
+      container.className = 'quick-special-container';
+
+      if (step.pivotVal !== null && step.pivotIdx >= 0) {
+        const pivotCard = document.createElement('div');
+        pivotCard.className = 'quick-pivot-card';
+        pivotCard.innerHTML = '<span>🎯 CHỐT CHẶN PIVOT:</span><span style="background:#fff; color:#7e22ce; padding:3px 12px; border-radius:6px; font-weight:900;">' + step.pivotVal + '</span><span style="font-size:0.8rem; opacity:0.9;">(Tại chỉ số high = ' + step.high + ')</span>';
+        container.appendChild(pivotCard);
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'quick-zones-wrapper';
+
+      const legends = document.createElement('div');
+      legends.className = 'quick-zone-legends';
+      legends.innerHTML = '<span style="color:#38bdf8;">■ Vùng &lt; Pivot [low..' + step.i + ']</span><span style="color:#f59e0b;">■ Vùng ≥ Pivot [' + (step.i + 1) + '..' + Math.max(step.i, step.j - 1) + ']</span><span style="color:#94a3b8;">■ Vùng Chưa Xét [' + step.j + '..' + (step.high - 1) + ']</span><span style="color:#c084fc;">■ Pivot [' + step.high + ']</span>';
+      wrapper.appendChild(legends);
+
+      const slotsRow = document.createElement('div');
+      slotsRow.className = 'quick-slots-row';
+
+      step.arr.forEach((val, idx) => {
+        const slot = document.createElement('div');
+        slot.className = 'quick-slot';
+
+        const isSorted = step.sortedIndices && step.sortedIndices.includes(idx);
+        const isPivot = idx === step.pivotIdx;
+        const isScanning = idx === step.scanningIdx;
+
+        if (isSorted) slot.classList.add('zone-sorted');
+        else if (isPivot) slot.classList.add('zone-pivot');
+        else if (idx >= step.low && idx <= step.i) slot.classList.add('zone-less');
+        else if (idx > step.i && idx < step.j) slot.classList.add('zone-greater');
+        else if (idx >= step.j && idx < step.high) slot.classList.add('zone-unvisited');
+        else slot.style.opacity = '0.35';
+
+        if (isScanning) slot.classList.add('scanning');
+
+        slot.innerHTML = '<span>' + val + '</span><span style="font-size:0.7rem; opacity:0.7;">[' + idx + ']</span>';
+
+        if (idx === step.i && step.i >= step.low) {
+          const pI = document.createElement('div');
+          pI.className = 'quick-pointer-tag';
+          pI.style.background = '#38bdf8';
+          pI.style.color = '#000';
+          pI.textContent = 'Ranh giới i';
+          slot.appendChild(pI);
+        }
+
+        if (idx === step.j && step.j < step.high) {
+          const pJ = document.createElement('div');
+          pJ.className = 'quick-pointer-tag';
+          pJ.style.background = '#fbbf24';
+          pJ.style.color = '#000';
+          pJ.style.bottom = '-38px';
+          pJ.textContent = 'Quét j';
+          slot.appendChild(pJ);
+        }
+
+        slotsRow.appendChild(slot);
+      });
+
+      wrapper.appendChild(slotsRow);
+      container.appendChild(wrapper);
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    function renderArrayBars(step) {
+      const container = document.createElement('div');
+      container.className = 'bars-container';
+      const maxVal = Math.max(...step.arr, 1);
+
+      step.arr.forEach((val, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bar-wrapper';
+
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        if (step.highlights && step.highlights[idx]) bar.classList.add(step.highlights[idx]);
+
+        const heightPercent = Math.max((val / maxVal) * 200, 30);
+        bar.style.height = heightPercent + 'px';
+        bar.textContent = val;
+
+        const indexLabel = document.createElement('div');
+        indexLabel.className = 'bar-index';
+        indexLabel.textContent = '[' + idx + ']';
+
+        wrapper.appendChild(bar);
+        wrapper.appendChild(indexLabel);
+
+        if (step.pointers && step.pointers[idx]) {
+          const ptr = document.createElement('div');
+          ptr.className = 'bar-pointer';
+          const pName = step.pointers[idx];
+          if (pName.includes('i')) ptr.classList.add('pointer-i');
+          else if (pName.includes('j')) ptr.classList.add('pointer-j');
+          else if (pName.includes('mid')) ptr.classList.add('pointer-mid');
+          else ptr.classList.add('pointer-min');
+          ptr.textContent = pName;
+          wrapper.appendChild(ptr);
+        }
+        container.appendChild(wrapper);
+      });
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    function renderLinkedList(step) {
+      const container = document.createElement('div');
+      container.className = 'linked-list-stage';
+
+      step.nodes.forEach((val, idx) => {
+        const nodeBox = document.createElement('div');
+        nodeBox.className = 'll-node';
+        if (idx === step.activeIdx) nodeBox.classList.add('active');
+
+        if (idx === 0) {
+          const lbl = document.createElement('div');
+          lbl.className = 'node-label';
+          lbl.style.background = '#38bdf8';
+          lbl.style.color = '#000';
+          lbl.textContent = 'head';
+          nodeBox.appendChild(lbl);
+        }
+
+        const dataDiv = document.createElement('div');
+        dataDiv.className = 'll-data';
+        dataDiv.textContent = val;
+
+        const nextDiv = document.createElement('div');
+        nextDiv.className = 'll-next';
+        nextDiv.textContent = 'next';
+
+        nodeBox.appendChild(dataDiv);
+        nodeBox.appendChild(nextDiv);
+        container.appendChild(nodeBox);
+
+        const arrow = document.createElement('div');
+        arrow.className = 'll-arrow';
+        arrow.textContent = '→';
+        container.appendChild(arrow);
+      });
+
+      const nullBox = document.createElement('div');
+      nullBox.className = 'll-null';
+      nullBox.textContent = 'NULL';
+      container.appendChild(nullBox);
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    function renderDoublyLinkedList(step) {
+      const container = document.createElement('div');
+      container.className = 'linked-list-stage';
+
+      step.nodes.forEach((val, idx) => {
+        const nodeBox = document.createElement('div');
+        nodeBox.className = 'll-node';
+        if (idx === step.activeIdx) nodeBox.classList.add('active');
+
+        const prevDiv = document.createElement('div');
+        prevDiv.className = 'll-prev';
+        prevDiv.textContent = 'prev';
+
+        const dataDiv = document.createElement('div');
+        dataDiv.className = 'll-data';
+        dataDiv.textContent = val;
+
+        const nextDiv = document.createElement('div');
+        nextDiv.className = 'll-next';
+        nextDiv.textContent = 'next';
+
+        nodeBox.appendChild(prevDiv);
+        nodeBox.appendChild(dataDiv);
+        nodeBox.appendChild(nextDiv);
+        container.appendChild(nodeBox);
+
+        if (idx < step.nodes.length - 1) {
+          const arrow = document.createElement('div');
+          arrow.className = 'll-arrow';
+          arrow.textContent = '⇄';
+          container.appendChild(arrow);
+        }
+      });
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    function renderStack(step) {
+      const stage = document.createElement('div');
+      stage.className = 'stack-stage';
+      const vessel = document.createElement('div');
+      vessel.className = 'stack-vessel';
+
+      step.stack.forEach((val, idx) => {
+        const item = document.createElement('div');
+        item.className = 'stack-item';
+        if (idx === step.stack.length - 1) item.classList.add('top-item');
+        item.textContent = val;
+        vessel.appendChild(item);
+      });
+
+      const info = document.createElement('div');
+      info.innerHTML = '<h4 style="color:var(--accent-primary); margin-bottom:8px;">Cấu trúc Stack LIFO</h4><p style="font-size:0.85rem; color:var(--text-muted);">Phần tử trên cùng là <strong>TOP</strong>.</p><p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Chỉ số top: <strong>' + (step.stack.length - 1) + '</strong></p>';
+
+      stage.appendChild(vessel);
+      stage.appendChild(info);
+      DOM.stageCanvas.appendChild(stage);
+    }
+
+    function renderRPN(step) {
+      const container = document.createElement('div');
+      container.style.width = '100%';
+      container.style.display = 'flex';
+      container.style.flexDirection = 'column';
+      container.style.gap = '20px';
+      container.style.alignItems = 'center';
+
+      const tokenBar = document.createElement('div');
+      tokenBar.style.display = 'flex';
+      tokenBar.style.gap = '10px';
+
+      step.tokens.forEach((tok, idx) => {
+        const tokBox = document.createElement('div');
+        tokBox.style.padding = '8px 14px';
+        tokBox.style.borderRadius = '6px';
+        tokBox.style.fontWeight = 'bold';
+        tokBox.style.fontSize = '1.1rem';
+        tokBox.textContent = tok;
+
+        if (idx === step.tokenIdx) {
+          tokBox.style.background = 'var(--accent-warning)';
+          tokBox.style.color = '#000';
+          tokBox.style.transform = 'scale(1.15)';
+        } else if (idx < step.tokenIdx) {
+          tokBox.style.background = 'rgba(56, 189, 248, 0.2)';
+          tokBox.style.color = 'var(--text-muted)';
+        } else {
+          tokBox.style.background = '#1e293b';
+          tokBox.style.color = '#fff';
+        }
+        tokenBar.appendChild(tokBox);
+      });
+
+      const vessel = document.createElement('div');
+      vessel.className = 'stack-vessel';
+      step.stack.forEach((val) => {
+        const it = document.createElement('div');
+        it.className = 'stack-item';
+        it.textContent = val;
+        vessel.appendChild(it);
+      });
+
+      container.appendChild(tokenBar);
+      container.appendChild(vessel);
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    function renderQueue(step) {
+      const stage = document.createElement('div');
+      stage.style.display = 'flex';
+      stage.style.flexDirection = 'column';
+      stage.style.alignItems = 'center';
+      stage.style.gap = '20px';
+
+      const vessel = document.createElement('div');
+      vessel.className = 'queue-vessel';
+
+      step.queue.forEach((val, idx) => {
+        const it = document.createElement('div');
+        it.className = 'queue-item';
+        it.textContent = val;
+        if (idx === 0) it.style.border = '2px solid var(--accent-success)';
+        if (idx === step.queue.length - 1) it.style.border = '2px solid var(--accent-warning)';
+        vessel.appendChild(it);
+      });
+
+      const labelBar = document.createElement('div');
+      labelBar.style.display = 'flex';
+      labelBar.style.justifyContent = 'space-between';
+      labelBar.style.width = '100%';
+      labelBar.style.fontSize = '0.85rem';
+      labelBar.innerHTML = '<span style="color:var(--accent-success); font-weight:bold;">⬅ FRONT (Lấy ra)</span><span style="color:var(--accent-warning); font-weight:bold;">REAR (Vào mới) ⬅</span>';
+
+      stage.appendChild(labelBar);
+      stage.appendChild(vessel);
+      DOM.stageCanvas.appendChild(stage);
+    }
+
+    function renderTree(step) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'tree-svg');
+      svg.setAttribute('viewBox', '0 0 700 360');
+
+      function drawNode(node, x, y, dx) {
+        if (!node) return;
+
+        if (node.left) {
+          const childX = x - dx;
+          const childY = y + 70;
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x); line.setAttribute('y1', y);
+          line.setAttribute('x2', childX); line.setAttribute('y2', childY);
+          line.setAttribute('class', 'tree-link');
+          svg.appendChild(line);
+          drawNode(node.left, childX, childY, dx / 1.8);
+        }
+
+        if (node.right) {
+          const childX = x + dx;
+          const childY = y + 70;
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x); line.setAttribute('y1', y);
+          line.setAttribute('x2', childX); line.setAttribute('y2', childY);
+          line.setAttribute('class', 'tree-link');
+          svg.appendChild(line);
+          drawNode(node.right, childX, childY, dx / 1.8);
+        }
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'tree-node' + (node.val === step.activeVal ? ' active' : ''));
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', 22);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', x);
+        text.setAttribute('y', y);
+        text.textContent = node.val;
+
+        g.appendChild(circle);
+        g.appendChild(text);
+
+        if (node.bf !== undefined) {
+          const bfText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          bfText.setAttribute('x', x + 24);
+          bfText.setAttribute('y', y - 10);
+          bfText.setAttribute('class', 'tree-badge');
+          bfText.textContent = 'BF: ' + (node.bf > 0 ? '+' + node.bf : node.bf);
+          g.appendChild(bfText);
+        }
+
+        svg.appendChild(g);
+      }
+
+      drawNode(step.treeData, 350, 45, 140);
+      DOM.stageCanvas.appendChild(svg);
+    }
+
+    function renderHashTable(step) {
+      const container = document.createElement('div');
+      container.style.display = 'flex';
+      container.style.flexDirection = 'column';
+      container.style.gap = '10px';
+      container.style.width = '100%';
+      container.style.maxWidth = '600px';
+
+      if (step.type === 'hash_chaining') {
+        step.buckets.forEach((bucket, idx) => {
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.alignItems = 'center';
+          row.style.gap = '10px';
+
+          const slotBadge = document.createElement('div');
+          slotBadge.style.width = '70px';
+          slotBadge.style.padding = '6px';
+          slotBadge.style.background = idx === step.highlightSlot ? 'var(--accent-warning)' : '#1e293b';
+          slotBadge.style.color = idx === step.highlightSlot ? '#000' : '#fff';
+          slotBadge.style.borderRadius = '4px';
+          slotBadge.style.textAlign = 'center';
+          slotBadge.style.fontWeight = 'bold';
+          slotBadge.textContent = '[' + idx + ']';
+
+          const chain = document.createElement('div');
+          chain.style.display = 'flex';
+          chain.style.alignItems = 'center';
+          chain.style.gap = '8px';
+
+          if (bucket.length === 0) {
+            chain.innerHTML = '<span style="color:var(--text-muted); font-size:0.8rem;">(rỗng)</span>';
+          } else {
+            bucket.forEach((item) => {
+              const node = document.createElement('div');
+              node.style.background = 'var(--accent-primary)';
+              node.style.color = '#0f172a';
+              node.style.padding = '4px 10px';
+              node.style.borderRadius = '4px';
+              node.style.fontWeight = '800';
+              node.textContent = item;
+              chain.appendChild(node);
+
+              const arrw = document.createElement('span');
+              arrw.textContent = '→';
+              arrw.style.color = 'var(--accent-primary)';
+              chain.appendChild(arrw);
+            });
+            const nul = document.createElement('span');
+            nul.style.fontSize = '0.75rem';
+            nul.style.color = 'var(--accent-danger)';
+            nul.textContent = 'NULL';
+            chain.appendChild(nul);
+          }
+
+          row.appendChild(slotBadge);
+          row.appendChild(chain);
+          container.appendChild(row);
+        });
+      } else {
+        step.table.forEach((val, idx) => {
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.alignItems = 'center';
+          row.style.gap = '10px';
+
+          const slotBadge = document.createElement('div');
+          slotBadge.style.width = '70px';
+          slotBadge.style.padding = '6px';
+          slotBadge.style.background = idx === step.highlightSlot ? 'var(--accent-warning)' : '#1e293b';
+          slotBadge.style.color = idx === step.highlightSlot ? '#000' : '#fff';
+          slotBadge.style.borderRadius = '4px';
+          slotBadge.style.textAlign = 'center';
+          slotBadge.style.fontWeight = 'bold';
+          slotBadge.textContent = '[' + idx + ']';
+
+          const cell = document.createElement('div');
+          cell.style.flex = '1';
+          cell.style.padding = '6px 12px';
+          cell.style.borderRadius = '4px';
+          cell.style.background = val !== null ? '#0284c7' : 'rgba(255,255,255,0.04)';
+          cell.style.fontWeight = 'bold';
+          cell.textContent = val !== null ? 'Khóa: ' + val : '(Chưa dùng)';
+
+          row.appendChild(slotBadge);
+          row.appendChild(cell);
+          container.appendChild(row);
+        });
+      }
+
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    /* PLAYBACK CONTROLS */
+    
+    /* ==========================================================================
+       LINKED LIST PHYSICS & INTERACTIVE POINTER SANDBOX MINI-GAME
+       ========================================================================== */
+    const LinkedListSandbox = {
+      canvas: null,
+      ctx: null,
+      isInitialized: false,
+      animationId: null,
+      nodes: [],
+      nullBlocks: [],
+      headId: null,
+      selectedNodeId: null,
+      hoveredPortNodeId: null,
+      hoveredDeleteNodeId: null,
+      hoveredItem: null,
+      dragTarget: null,
+      dragWire: null,
+      traverseState: { isRunning: false, curIndex: -1, order: [], timer: null },
+      nodeCounter: 4,
+      nullCounter: 1,
+
+      init: function(canvasElement) {
+        if (!canvasElement) return;
+        this.canvas = canvasElement;
+        this.ctx = canvasElement.getContext('2d');
+
+        // Set dimensions cleanly
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width > 200 ? rect.width : (this.canvas.parentElement ? this.canvas.parentElement.clientWidth : 800);
+        this.canvas.height = 460;
+
+        if (this.nodes.length === 0) {
+          this.resetDefaults();
+        }
+
+        this.bindEvents();
+        this.isInitialized = true;
+        this.stopAnimation();
+        this.startAnimation();
+        this.updateAnalysisAndCode();
+      },
+
+      stop: function() {
+        this.isInitialized = false;
+        this.stopAnimation();
+        this.stopTraverse();
+      },
+
+      stopAnimation: function() {
+        if (this.animationId) {
+          if (typeof window !== 'undefined' && window.cancelAnimationFrame) window.cancelAnimationFrame(this.animationId);
+          else if (typeof cancelAnimationFrame !== 'undefined') cancelAnimationFrame(this.animationId);
+          this.animationId = null;
+        }
+      },
+
+      startAnimation: function() {
+        const loop = () => {
+          this.updatePhysics();
+          this.render();
+          if (this.isInitialized) {
+            if (typeof window !== 'undefined' && window.requestAnimationFrame) this.animationId = window.requestAnimationFrame(loop);
+            else if (typeof requestAnimationFrame !== 'undefined') this.animationId = requestAnimationFrame(loop);
+          }
+        };
+        if (typeof window !== 'undefined' && window.requestAnimationFrame) this.animationId = window.requestAnimationFrame(loop);
+        else if (typeof requestAnimationFrame !== 'undefined') this.animationId = requestAnimationFrame(loop);
+      },
+
+      resetDefaults: function() {
+        this.stopTraverse();
+        const startY = 190;
+        this.nodes = [
+          { id: 'node_1', val: 10, addr: '0x10A0', x: 80,  y: startY, vx: 0, vy: 0, w: 124, h: 52, nextId: 'node_2' },
+          { id: 'node_2', val: 25, addr: '0x10B8', x: 280, y: startY, vx: 0, vy: 0, w: 124, h: 52, nextId: 'node_3' },
+          { id: 'node_3', val: 40, addr: '0x10D0', x: 480, y: startY, vx: 0, vy: 0, w: 124, h: 52, nextId: 'null_0' }
+        ];
+        this.nullBlocks = [
+          { id: 'null_0', x: 670, y: startY + 5, vx: 0, vy: 0, w: 76, h: 42, label: 'nullptr' }
+        ];
+        this.headId = 'node_1';
+        this.selectedNodeId = 'node_1';
+        this.nodeCounter = 4;
+        this.nullCounter = 1;
+        this.updateAnalysisAndCode();
+      },
+
+      addNode: function(val) {
+        const num = this.nodeCounter++;
+        const hex = '0x' + (0x10D0 + (num - 3) * 0x18).toString(16).toUpperCase();
+        const spawnX = Math.max(40, Math.min((this.canvas ? this.canvas.width : 800) - 160, 100 + Math.random() * 400));
+        const spawnY = Math.max(60, Math.min(360, 100 + Math.random() * 200));
+
+        const newNode = {
+          id: 'node_' + num,
+          val: (val !== undefined && !isNaN(val)) ? val : Math.floor(Math.random() * 89) + 10,
+          addr: hex,
+          x: spawnX,
+          y: spawnY,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          w: 124,
+          h: 52,
+          nextId: null
+        };
+        this.nodes.push(newNode);
+        this.selectedNodeId = newNode.id;
+        if (!this.headId || !this.nodes.some(n => n.id === this.headId)) {
+          this.headId = newNode.id;
+        }
+        this.updateAnalysisAndCode();
+        return newNode;
+      },
+
+      addNullBlock: function() {
+        const num = this.nullCounter++;
+        const spawnX = Math.max(40, Math.min((this.canvas ? this.canvas.width : 800) - 100, 300 + Math.random() * 300));
+        const spawnY = Math.max(60, Math.min(360, 120 + Math.random() * 180));
+        const block = {
+          id: 'null_' + num,
+          x: spawnX,
+          y: spawnY,
+          vx: 0,
+          vy: 0,
+          w: 76,
+          h: 42,
+          label: 'nullptr'
+        };
+        this.nullBlocks.push(block);
+        this.updateAnalysisAndCode();
+        return block;
+      },
+
+      setHeadSelected: function() {
+        if (!this.selectedNodeId) {
+          alert('Vui lòng click chọn một Node trên Canvas trước khi bấm Đặt làm HEAD!');
+          return;
+        }
+        const found = this.nodes.find(n => n.id === this.selectedNodeId);
+        if (found) {
+          this.headId = found.id;
+          this.updateAnalysisAndCode();
+        }
+      },
+
+      deleteSelected: function() {
+        if (!this.selectedNodeId) {
+          alert('Vui lòng chọn 1 Node trên canvas để xóa!');
+          return;
+        }
+        const delId = this.selectedNodeId;
+        // Unlink any nodes pointing to this node
+        this.nodes.forEach(n => {
+          if (n.nextId === delId) n.nextId = null;
+        });
+        this.nodes = this.nodes.filter(n => n.id !== delId);
+        this.nullBlocks = this.nullBlocks.filter(b => b.id !== delId);
+
+        if (this.headId === delId) {
+          this.headId = this.nodes.length > 0 ? this.nodes[0].id : null;
+        }
+        this.selectedNodeId = this.nodes.length > 0 ? this.nodes[0].id : null;
+        this.updateAnalysisAndCode();
+      },
+
+      detectCycle: function() {
+        if (!this.headId) return { hasCycle: false, cycleNodes: [] };
+        const visited = new Set();
+        let curId = this.headId;
+        while (curId) {
+          if (visited.has(curId)) {
+            return { hasCycle: true, cycleStart: curId, cycleNodes: Array.from(visited) };
+          }
+          visited.add(curId);
+          const node = this.nodes.find(n => n.id === curId);
+          if (!node || !node.nextId || node.nextId.startsWith('null')) break;
+          curId = node.nextId;
+        }
+        return { hasCycle: false, cycleNodes: [] };
+      },
+
+      runTraverse: function() {
+        this.stopTraverse();
+        if (!this.headId || !this.nodes.some(n => n.id === this.headId)) {
+          alert('Chưa có Node HEAD hoặc danh sách rỗng! Hãy tạo Node và bấm chọn HEAD.');
+          return;
+        }
+
+        const visited = new Set();
+        const order = [];
+        let curId = this.headId;
+        let cycleStart = null;
+
+        while (curId) {
+          const node = this.nodes.find(n => n.id === curId);
+          if (!node) break;
+          if (visited.has(curId)) {
+            cycleStart = curId;
+            order.push({ node, isCycleRepeat: true });
+            break;
+          }
+          visited.add(curId);
+          order.push({ node, isCycleRepeat: false });
+          if (!node.nextId || node.nextId.startsWith('null')) break;
+          curId = node.nextId;
+        }
+
+        this.traverseState = {
+          isRunning: true,
+          curIndex: 0,
+          order: order,
+          timer: null
+        };
+
+        const executeStep = () => {
+          if (!this.traverseState.isRunning) return;
+          const idx = this.traverseState.curIndex;
+          if (idx >= order.length) {
+            this.finishTraverse(cycleStart);
+            return;
+          }
+
+          const item = order[idx];
+          this.selectedNodeId = item.node.id;
+
+          const exp = document.getElementById('explanationText');
+          const badge = document.getElementById('passBadge');
+          if (badge) badge.textContent = 'Duyệt: Bước ' + (idx + 1) + ' / ' + order.length;
+
+          if (exp) {
+            if (item.isCycleRepeat) {
+              exp.innerHTML = '<span style="color:var(--accent-danger); font-weight:700;">⚠️ PHÁT HIỆN VÒNG LẶP (Infinite Cycle)!</span><br>' +
+                'Con trỏ <code>cur</code> quay ngược lại <strong>Node ' + item.node.addr + ' (Giá trị ' + item.node.val + ')</strong>.<br>' +
+                'Nếu duyệt trong C++ bằng <code>while(cur != nullptr)</code>, chương trình sẽ rơi vào vòng lặp vô tận!';
+            } else {
+              const nextStr = item.node.nextId ? (item.node.nextId.startsWith('null') ? 'nullptr' : ('Node ' + (this.nodes.find(n => n.id === item.node.nextId) ? this.nodes.find(n => n.id === item.node.nextId).addr : 'Unknown'))) : 'NULL (chưa nối)';
+              exp.innerHTML = '<span style="color:var(--accent-success); font-weight:700;">▶ Bước ' + (idx + 1) + ': Đang duyệt Node ' + item.node.addr + '</span><br>' +
+                '• Đọc giá trị <code>cur-&gt;data</code> = <strong>' + item.node.val + '</strong><br>' +
+                '• Đọc địa chỉ <code>cur-&gt;next</code> = <strong>' + nextStr + '</strong><br>' +
+                '• Thực hiện lệnh C++: <code>cur = cur-&gt;next;</code>';
+            }
+          }
+
+          this.traverseState.curIndex++;
+          this.traverseState.timer = setTimeout(executeStep, 900);
+        };
+
+        executeStep();
+      },
+
+      finishTraverse: function(cycleStart) {
+        this.traverseState.isRunning = false;
+        const exp = document.getElementById('explanationText');
+        if (exp && !cycleStart) {
+          exp.innerHTML += '<br><span style="color:var(--accent-primary); font-weight:700;">✅ Hoàn tất duyệt! Con trỏ cur đã trỏ vào nullptr.</span>';
+        }
+      },
+
+      stopTraverse: function() {
+        if (this.traverseState.timer) {
+          clearTimeout(this.traverseState.timer);
+          this.traverseState.timer = null;
+        }
+        this.traverseState.isRunning = false;
+      },
+
+      updatePhysics: function() {
+        if (!this.canvas) return;
+        const cw = this.canvas.width;
+        const ch = this.canvas.height;
+        const items = [...this.nodes, ...this.nullBlocks];
+
+        // 1. Move and boundary check
+        items.forEach(item => {
+          if (this.dragTarget && this.dragTarget.item === item) return;
+          item.x += item.vx || 0;
+          item.y += item.vy || 0;
+          item.vx = (item.vx || 0) * 0.88;
+          item.vy = (item.vy || 0) * 0.88;
+
+          if (item.x < 10) { item.x = 10; item.vx = Math.abs(item.vx) * 0.5; }
+          if (item.x + item.w > cw - 10) { item.x = cw - 10 - item.w; item.vx = -Math.abs(item.vx) * 0.5; }
+          if (item.y < 35) { item.y = 35; item.vy = Math.abs(item.vy) * 0.5; }
+          if (item.y + item.h > ch - 10) { item.y = ch - 10 - item.h; item.vy = -Math.abs(item.vy) * 0.5; }
+        });
+
+        // 2. Soft pairwise collision separation
+        for (let i = 0; i < items.length; i++) {
+          for (let j = i + 1; j < items.length; j++) {
+            const a = items[i];
+            const b = items[j];
+            const cxA = a.x + a.w / 2;
+            const cyA = a.y + a.h / 2;
+            const cxB = b.x + b.w / 2;
+            const cyB = b.y + b.h / 2;
+            const dx = cxB - cxA;
+            const dy = cyB - cyA;
+            const minDistX = (a.w + b.w) / 2 + 10;
+            const minDistY = (a.h + b.h) / 2 + 10;
+
+            if (Math.abs(dx) < minDistX && Math.abs(dy) < minDistY) {
+              const overlapX = minDistX - Math.abs(dx);
+              const overlapY = minDistY - Math.abs(dy);
+
+              if (overlapX < overlapY) {
+                const push = (overlapX / 2) * 0.35;
+                if (dx > 0) {
+                  if (!this.dragTarget || this.dragTarget.item !== a) a.x -= push;
+                  if (!this.dragTarget || this.dragTarget.item !== b) b.x += push;
+                } else {
+                  if (!this.dragTarget || this.dragTarget.item !== a) a.x += push;
+                  if (!this.dragTarget || this.dragTarget.item !== b) b.x -= push;
+                }
+              } else {
+                const push = (overlapY / 2) * 0.35;
+                if (dy > 0) {
+                  if (!this.dragTarget || this.dragTarget.item !== a) a.y -= push;
+                  if (!this.dragTarget || this.dragTarget.item !== b) b.y += push;
+                } else {
+                  if (!this.dragTarget || this.dragTarget.item !== a) a.y += push;
+                  if (!this.dragTarget || this.dragTarget.item !== b) b.y -= push;
+                }
+              }
+            }
+          }
+        }
+      },
+
+      render: function() {
+        if (!this.ctx || !this.canvas) return;
+        const ctx = this.ctx;
+        const cw = this.canvas.width;
+        const ch = this.canvas.height;
+
+        // Clear canvas
+        ctx.fillStyle = '#0a101f';
+        ctx.fillRect(0, 0, cw, ch);
+
+        // Subtle dot grid
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+        for (let x = 20; x < cw; x += 25) {
+          for (let y = 20; y < ch; y += 25) {
+            ctx.beginPath();
+            ctx.arc(x, y, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        const cycle = this.detectCycle();
+
+        // 1. Draw Wires (Edges)
+        this.nodes.forEach(node => {
+          if (!node.nextId) return;
+          const target = [...this.nodes, ...this.nullBlocks].find(it => it.id === node.nextId);
+          if (!target) return;
+
+          const startX = node.x + node.w - 14;
+          const startY = node.y + node.h / 2;
+          const endX = target.x;
+          const endY = target.y + target.h / 2;
+
+          const dx = endX - startX;
+          const ctrlDist = Math.max(45, Math.abs(dx) * 0.45);
+          const cp1X = startX + ctrlDist;
+          const cp1Y = startY;
+          const cp2X = endX - ctrlDist;
+          const cp2Y = endY;
+
+          const isCycleEdge = cycle.hasCycle && cycle.cycleNodes.includes(node.id) && cycle.cycleNodes.includes(target.id);
+
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
+
+          if (isCycleEdge) {
+            ctx.strokeStyle = '#f87171';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([6, 4]);
+          } else if (target.id.startsWith('null')) {
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([]);
+          } else {
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Arrowhead
+          this.drawArrowhead(ctx, cp2X, cp2Y, endX, endY, isCycleEdge ? '#f87171' : (target.id.startsWith('null') ? '#94a3b8' : '#38bdf8'));
+        });
+
+        // 2. Draw Active Dragging Wire
+        if (this.dragWire) {
+          const fromNode = this.nodes.find(n => n.id === this.dragWire.fromId);
+          if (fromNode) {
+            const startX = fromNode.x + fromNode.w - 14;
+            const startY = fromNode.y + fromNode.h / 2;
+            const curX = this.dragWire.curX;
+            const curY = this.dragWire.curY;
+            const ctrlDist = Math.max(40, Math.abs(curX - startX) * 0.45);
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.bezierCurveTo(startX + ctrlDist, startY, curX - ctrlDist, curY, curX, curY);
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 3.5;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.beginPath();
+            ctx.arc(curX, curY, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#fbbf24';
+            ctx.fill();
+          }
+        }
+
+        // 3. Draw NULL Blocks
+        this.nullBlocks.forEach(b => {
+          this.drawNullBlock(ctx, b);
+        });
+
+        // 4. Draw Nodes
+        this.nodes.forEach(node => {
+          this.drawNode(ctx, node, cycle);
+        });
+      },
+
+      drawArrowhead: function(ctx, fromX, fromY, toX, toY, color) {
+        const headlen = 10;
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(toX, toY);
+        ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+      },
+
+      drawNullBlock: function(ctx, b) {
+        ctx.save();
+        ctx.beginPath();
+        this.roundRect(ctx, b.x, b.y, b.w, b.h, 8);
+        ctx.fillStyle = '#1e293b';
+        ctx.fill();
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = 'bold 13px Consolas, monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('⏚ nullptr', b.x + b.w / 2, b.y + b.h / 2);
+        ctx.restore();
+      },
+
+      drawNode: function(ctx, node, cycle) {
+        const isSelected = (node.id === this.selectedNodeId);
+        const isHead = (node.id === this.headId);
+        const isTraverseActive = this.traverseState.isRunning && this.nodes[this.traverseState.curIndex - 1] && (this.nodes[this.traverseState.curIndex - 1].id === node.id);
+        const inCycle = cycle.hasCycle && cycle.cycleNodes.includes(node.id);
+
+        ctx.save();
+
+        // Glow effects
+        if (isTraverseActive) {
+          ctx.shadowColor = '#34d399';
+          ctx.shadowBlur = 18;
+        } else if (isSelected) {
+          ctx.shadowColor = '#38bdf8';
+          ctx.shadowBlur = 16;
+        } else if (inCycle) {
+          ctx.shadowColor = '#f87171';
+          ctx.shadowBlur = 12;
+        }
+
+        // Node Card background
+        ctx.beginPath();
+        this.roundRect(ctx, node.x, node.y, node.w, node.h, 8);
+        ctx.fillStyle = '#141e33';
+        ctx.fill();
+
+        // Border
+        if (isTraverseActive) {
+          ctx.strokeStyle = '#34d399';
+          ctx.lineWidth = 3;
+        } else if (inCycle) {
+          ctx.strokeStyle = '#f87171';
+          ctx.lineWidth = 2.5;
+        } else if (isSelected) {
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 2.5;
+        } else {
+          ctx.strokeStyle = '#334155';
+          ctx.lineWidth = 1.5;
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0; // reset shadow
+
+        // Top mini-bar: Memory Address
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px Consolas, monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(node.addr, node.x + 8, node.y + 5);
+
+        // Vertical divider separating DATA and NEXT
+        const divX = node.x + 68;
+        ctx.beginPath();
+        ctx.moveTo(divX, node.y + 18);
+        ctx.lineTo(divX, node.y + node.h - 4);
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Left Cell: DATA
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '9px sans-serif';
+        ctx.fillText('DATA', node.x + 8, node.y + 19);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 17px Consolas, monospace';
+        ctx.fillText(node.val.toString(), node.x + 8, node.y + 30);
+
+        // Right Cell: NEXT
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '9px sans-serif';
+        ctx.fillText('NEXT', divX + 6, node.y + 19);
+
+        // Next address string or symbol
+        let nextText = 'null';
+        if (node.nextId) {
+          if (node.nextId.startsWith('null')) nextText = 'null';
+          else {
+            const tgt = this.nodes.find(n => n.id === node.nextId);
+            nextText = tgt ? tgt.addr.substring(2) : '??';
+          }
+        }
+        ctx.fillStyle = node.nextId ? (node.nextId.startsWith('null') ? '#94a3b8' : '#38bdf8') : '#ef4444';
+        ctx.font = '10px Consolas, monospace';
+        ctx.fillText(nextText, divX + 6, node.y + 33);
+
+        // Port circle on the right edge
+        const portX = node.x + node.w - 14;
+        const portY = node.y + node.h / 2;
+        const isPortHovered = (this.hoveredPortNodeId === node.id);
+
+        ctx.beginPath();
+        ctx.arc(portX, portY, isPortHovered ? 8 : 6.5, 0, Math.PI * 2);
+        ctx.fillStyle = isPortHovered ? '#38bdf8' : '#0284c7';
+        ctx.fill();
+        ctx.strokeStyle = '#f8fafc';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(portX, portY, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Floating HEAD badge if head node
+        if (isHead) {
+          ctx.fillStyle = '#fbbf24';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('👑 HEAD', node.x + node.w / 2, node.y - 14);
+
+          ctx.beginPath();
+          ctx.moveTo(node.x + node.w / 2, node.y - 2);
+          ctx.lineTo(node.x + node.w / 2 - 4, node.y - 6);
+          ctx.lineTo(node.x + node.w / 2 + 4, node.y - 6);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        ctx.restore();
+      },
+
+      roundRect: function(ctx, x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+      },
+
+      bindEvents: function() {
+        if (!this.canvas) return;
+        const c = this.canvas;
+
+        c.onmousedown = (e) => this.handleMouseDown(e);
+        c.onmousemove = (e) => this.handleMouseMove(e);
+        window.onmouseup = (e) => this.handleMouseUp(e);
+        c.ondblclick = (e) => this.handleDblClick(e);
+      },
+
+      getMousePos: function(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        return {
+          x: (e.clientX - rect.left) * (this.canvas.width / rect.width),
+          y: (e.clientY - rect.top) * (this.canvas.height / rect.height)
+        };
+      },
+
+      handleMouseDown: function(e) {
+        const pos = this.getMousePos(e);
+
+        // 1. Check if clicked port
+        for (let i = this.nodes.length - 1; i >= 0; i--) {
+          const n = this.nodes[i];
+          const px = n.x + n.w - 14;
+          const py = n.y + n.h / 2;
+          const dist = Math.hypot(pos.x - px, pos.y - py);
+          if (dist <= 14) {
+            this.dragWire = {
+              fromId: n.id,
+              startX: px,
+              startY: py,
+              curX: pos.x,
+              curY: pos.y
+            };
+            return;
+          }
+        }
+
+        // 2. Check if clicked node
+        for (let i = this.nodes.length - 1; i >= 0; i--) {
+          const n = this.nodes[i];
+          if (pos.x >= n.x && pos.x <= n.x + n.w && pos.y >= n.y && pos.y <= n.y + n.h) {
+            this.selectedNodeId = n.id;
+            this.dragTarget = {
+              type: 'node',
+              item: n,
+              offsetX: pos.x - n.x,
+              offsetY: pos.y - n.y
+            };
+            this.updateAnalysisAndCode();
+            return;
+          }
+        }
+
+        // 3. Check if clicked null block
+        for (let i = this.nullBlocks.length - 1; i >= 0; i--) {
+          const b = this.nullBlocks[i];
+          if (pos.x >= b.x && pos.x <= b.x + b.w && pos.y >= b.y && pos.y <= b.y + b.h) {
+            this.dragTarget = {
+              type: 'null',
+              item: b,
+              offsetX: pos.x - b.x,
+              offsetY: pos.y - b.y
+            };
+            return;
+          }
+        }
+
+        // Clicked outside -> deselect
+        this.selectedNodeId = null;
+        this.updateAnalysisAndCode();
+      },
+
+      handleMouseMove: function(e) {
+        const pos = this.getMousePos(e);
+
+        if (this.dragWire) {
+          this.dragWire.curX = pos.x;
+          this.dragWire.curY = pos.y;
+          this.canvas.style.cursor = 'crosshair';
+          return;
+        }
+
+        if (this.dragTarget) {
+          const it = this.dragTarget.item;
+          it.x = pos.x - this.dragTarget.offsetX;
+          it.y = pos.y - this.dragTarget.offsetY;
+          it.vx = 0; it.vy = 0;
+          this.canvas.style.cursor = 'grabbing';
+          return;
+        }
+
+        // Check hover port
+        let hoveringPort = false;
+        for (let i = this.nodes.length - 1; i >= 0; i--) {
+          const n = this.nodes[i];
+          const px = n.x + n.w - 14;
+          const py = n.y + n.h / 2;
+          if (Math.hypot(pos.x - px, pos.y - py) <= 14) {
+            this.hoveredPortNodeId = n.id;
+            hoveringPort = true;
+            this.canvas.style.cursor = 'crosshair';
+            return;
+          }
+        }
+        this.hoveredPortNodeId = null;
+
+        // Check hover node or null block
+        const isOverItem = [...this.nodes, ...this.nullBlocks].some(it =>
+          pos.x >= it.x && pos.x <= it.x + it.w && pos.y >= it.y && pos.y <= it.y + it.h
+        );
+        this.canvas.style.cursor = isOverItem ? 'grab' : 'default';
+      },
+
+      handleMouseUp: function(e) {
+        const pos = this.getMousePos(e);
+
+        if (this.dragWire) {
+          const fromNode = this.nodes.find(n => n.id === this.dragWire.fromId);
+          if (fromNode) {
+            // Find target node under mouse
+            let targetItem = null;
+            for (let i = this.nodes.length - 1; i >= 0; i--) {
+              const n = this.nodes[i];
+              if (n.id !== fromNode.id && pos.x >= n.x && pos.x <= n.x + n.w && pos.y >= n.y && pos.y <= n.y + n.h) {
+                targetItem = n;
+                break;
+              }
+            }
+
+            if (!targetItem) {
+              for (let i = this.nullBlocks.length - 1; i >= 0; i--) {
+                const b = this.nullBlocks[i];
+                if (pos.x >= b.x && pos.x <= b.x + b.w && pos.y >= b.y && pos.y <= b.y + b.h) {
+                  targetItem = b;
+                  break;
+                }
+              }
+            }
+
+            if (targetItem) {
+              fromNode.nextId = targetItem.id;
+            } else {
+              // Disconnect if dropped in empty space
+              fromNode.nextId = null;
+            }
+            this.updateAnalysisAndCode();
+          }
+          this.dragWire = null;
+        }
+
+        if (this.dragTarget) {
+          this.dragTarget = null;
+        }
+      },
+
+      handleDblClick: function(e) {
+        const pos = this.getMousePos(e);
+        // Double-click on node disconnects its wire
+        for (let i = this.nodes.length - 1; i >= 0; i--) {
+          const n = this.nodes[i];
+          if (pos.x >= n.x && pos.x <= n.x + n.w && pos.y >= n.y && pos.y <= n.y + n.h) {
+            n.nextId = null;
+            this.updateAnalysisAndCode();
+            return;
+          }
+        }
+      },
+
+      updateAnalysisAndCode: function() {
+        const cycle = this.detectCycle();
+        const statusEl = document.getElementById('sandboxStatus');
+        if (statusEl) {
+          if (cycle.hasCycle) {
+            statusEl.style.background = '#dc2626';
+            statusEl.innerHTML = '⚠️ PHÁT HIỆN VÒNG LẶP (Cycle Detected)!';
+          } else {
+            statusEl.style.background = '#0284c7';
+            statusEl.innerHTML = this.nodes.length + ' Nodes | Hợp lệ (Không lặp vô tận)';
+          }
+        }
+
+        // Update Explanation
+        const exp = document.getElementById('explanationText');
+        if (exp) {
+          const headNode = this.nodes.find(n => n.id === this.headId);
+          let summary = '<strong>Trạng thái Heap:</strong> ' + this.nodes.length + ' node được cấp phát động.<br>';
+          if (headNode) {
+            summary += '• <strong>HEAD:</strong> <code>' + headNode.addr + '</code> (giá trị ' + headNode.val + ')<br>';
+          } else {
+            summary += '• <strong>HEAD:</strong> <code>nullptr</code> (Danh sách đang rỗng)<br>';
+          }
+
+          if (cycle.hasCycle) {
+            summary += '<span style="color:var(--accent-danger);">• CẢNH BÁO: Tồn tại chu trình khép kín! Node quay lại điểm xuất phát.</span>';
+          } else {
+            summary += '• Cấu trúc danh sách hợp lệ, kết thúc an toàn bằng <code>nullptr</code>.';
+          }
+          exp.innerHTML = summary;
+        }
+
+        // Generate C++ code and render into DOM.codeContainer
+        const cppLines = this.generateCppProgram(cycle);
+        const container = document.getElementById('codeContainer');
+        if (container) {
+          container.innerHTML = '';
+          cppLines.forEach((line, idx) => {
+            const row = document.createElement('div');
+            row.className = 'code-line';
+            row.innerHTML = '<span class="line-num">' + (idx + 1) + '</span><span>' + this.escapeHtml(line) + '</span>';
+            container.appendChild(row);
+          });
+        }
+      },
+
+      escapeHtml: function(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      },
+
+      generateCppProgram: function(cycle) {
+        const lines = [];
+        lines.push('#include <iostream>');
+        lines.push('using namespace std;');
+        lines.push('');
+        lines.push('// ==========================================================');
+        lines.push('// 1. ĐỊNH NGHĨA CẤU TRÚC NODE DANH SÁCH LIÊN KẾT ĐƠN');
+        lines.push('// ==========================================================');
+        lines.push('struct Node {');
+        lines.push('    int data;       // Giá trị phần tử');
+        lines.push('    Node* next;     // Con trỏ lưu địa chỉ Node kế tiếp');
+        lines.push('    ');
+        lines.push('    // Constructor khởi tạo ô nhớ trên Heap');
+        lines.push('    Node(int val) : data(val), next(nullptr) {}');
+        lines.push('};');
+        lines.push('');
+        lines.push('// ==========================================================');
+        lines.push('// 2. HÀM IN DANH SÁCH LIÊN KẾT');
+        lines.push('// ==========================================================');
+        lines.push('void printList(Node* head) {');
+        lines.push('    Node* current = head;');
+        lines.push('    cout << "HEAD -> ";');
+        lines.push('    while (current != nullptr) {');
+        lines.push('        cout << "[" << current->data << "] -> ";');
+        lines.push('        current = current->next;');
+        lines.push('    }');
+        lines.push('    cout << "nullptr" << endl;');
+        lines.push('}');
+        lines.push('');
+        lines.push('// ==========================================================');
+        lines.push('// 3. CHƯƠNG TRÌNH CHÍNH (MAIN)');
+        lines.push('// ==========================================================');
+        lines.push('int main() {');
+        lines.push('    cout << "=== DANH SÁCH LIÊN KẾT TỪ SANDBOX ===\n";');
+        lines.push('');
+        lines.push('    // BƯỚC 1: Cấp phát động các Node trên Heap');
+
+        if (this.nodes.length === 0) {
+          lines.push('    Node* head = nullptr; // Danh sách rỗng');
+        } else {
+          this.nodes.forEach(n => {
+            lines.push('    Node* ' + n.id + ' = new Node(' + n.val + '); // Dia chi gia lap: ' + n.addr);
+          });
+          lines.push('');
+          lines.push('    // BƯỚC 2: Thiết lập liên kết con trỏ next (Kéo dây)');
+          this.nodes.forEach(n => {
+            if (!n.nextId || n.nextId.startsWith('null')) {
+              lines.push('    ' + n.id + '->next = nullptr;');
+            } else {
+              lines.push('    ' + n.id + '->next = ' + n.nextId + ';');
+            }
+          });
+          lines.push('');
+          lines.push('    // BƯỚC 3: Thiết lập con trỏ quản lý HEAD');
+          const headNode = this.nodes.find(n => n.id === this.headId) || this.nodes[0];
+          lines.push('    Node* head = ' + headNode.id + ';');
+          lines.push('');
+
+          if (cycle && cycle.hasCycle) {
+            lines.push('    // ⚠️ CẢNH BÁO: Phát hiện vòng lặp vô tận (Cycle: ' + cycle.cycleStart + ')');
+            lines.push('    // Khong the goi printList(head) vi chuong trinh se bi treo.');
+            lines.push('    cout << "[Canh bao] Danh sach co vong lap tai node: ' + cycle.cycleStart + '" << endl;');
+          } else {
+            lines.push('    // BƯỚC 4: Duyệt và in danh sách ra màn hình');
+            lines.push('    printList(head);');
+          }
+          lines.push('');
+          lines.push('    // BƯỚC 5: Giải phóng bộ nhớ động (Tránh rò rỉ Memory Leak)');
+          this.nodes.forEach(n => {
+            lines.push('    delete ' + n.id + ';');
+          });
+        }
+        lines.push('');
+        lines.push('    return 0;');
+        lines.push('}');
+        return lines;
+      }
+    };
+function initAlgorithm(algoKey) {
+      State.currentAlgo = algoKey;
+      const meta = AlgoMeta[algoKey];
+
+      DOM.compBest.textContent = meta.best;
+      DOM.compAvg.textContent = meta.avg;
+      DOM.compWorst.textContent = meta.worst;
+      DOM.compSpace.textContent = meta.space;
+      DOM.propStable.textContent = meta.stable;
+
+      DOM.codeContainer.innerHTML = '';
+      meta.code.forEach((line, idx) => {
+        const lineDiv = document.createElement('div');
+        lineDiv.className = 'code-line';
+        lineDiv.innerHTML = '<span class="line-num">' + (idx + 1) + '</span><span>' + escapeHtml(line) + '</span>';
+        DOM.codeContainer.appendChild(lineDiv);
+      });
+
+      if (algoKey === 'll_sandbox') {
+        pause();
+        DOM.playbackBar.style.display = 'none';
+        DOM.stageCanvas.innerHTML = '<div class="sandbox-container">' +
+          '<div class="sandbox-topbar">' +
+            '<div class="sandbox-toolbar-group">' +
+              '<span style="font-size:0.85rem; font-weight:700; color:var(--accent-primary);">🎮 Sandbox Thao Tác Con Trỏ &amp; Va Chạm Vật Lý</span>' +
+            '</div>' +
+            '<div class="sandbox-toolbar-group">' +
+              '<span id="sandboxStatus" class="hud-badge" style="background:#0284c7; color:#fff; font-size:0.75rem; padding:4px 10px; border-radius:4px;">Đang tải Sandbox...</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="sandbox-hud">' +
+            '<span>💡 <strong>Hướng dẫn:</strong> Nhấn giữ cổng tròn <code>[next •]</code> bên phải Node để kéo dây nối tới Node khác hoặc khối NULL | Kéo thân node để di chuyển tự do (có va chạm mềm) | Nhấp đúp vào Node để ngắt dây | Chọn Node rồi bấm 👑 Đặt làm HEAD | Bấm ▶ Chạy Duyệt để xem con trỏ chạy từng bước và tự động sinh code C++ hoàn chỉnh!</span>' +
+          '</div>' +
+          '<canvas id="sandboxCanvas"></canvas>' +
+        '</div>';
+        const canvas = document.getElementById('sandboxCanvas');
+        LinkedListSandbox.init(canvas);
+        return;
+      } else {
+        if (LinkedListSandbox && LinkedListSandbox.isInitialized) {
+          LinkedListSandbox.stop();
+        }
+        DOM.playbackBar.style.display = 'flex';
+      }
+
+      generateSteps();
+      goToStep(0);
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function generateSteps() {
+      pause();
+      const algo = State.currentAlgo;
+      const meta = AlgoMeta[algo];
+
+      if (meta.category === 'search') {
+        if (algo === 'linear_search') State.steps = generateLinearSearchSteps(State.data, State.targetVal);
+        else State.steps = generateBinarySearchSteps(State.data, State.targetVal);
+      }
+      else if (meta.category === 'sort') {
+        if (algo === 'bubble_sort') State.steps = generateBubbleSortSteps(State.data, false);
+        else if (algo === 'bubble_sort_optimized') State.steps = generateBubbleSortSteps(State.data, true);
+        else if (algo === 'selection_sort') State.steps = generateSelectionSortSteps(State.data);
+        else if (algo === 'interchange_sort') State.steps = generateInterchangeSortSteps(State.data);
+        else if (algo === 'insertion_sort') State.steps = generateInsertionSortSteps(State.data);
+        else if (algo === 'merge_sort') State.steps = generateMergeSortSpecialSteps(State.data);
+        else if (algo === 'heap_sort') State.steps = generateHeapSortSpecialSteps(State.data);
+        else if (algo === 'quick_sort') State.steps = generateQuickSortSpecialSteps(State.data);
+      }
+      else if (meta.category === 'linkedlist') {
+        State.steps = generateLinkedListSteps(algo, State.targetVal);
+      }
+      else if (meta.category === 'stackqueue') {
+        State.steps = generateStackQueueSteps(algo);
+      }
+      else if (meta.category === 'trees') {
+        State.steps = generateTreeSteps(algo);
+      }
+      else if (meta.category === 'hashtable') {
+        State.steps = generateHashTableSteps(algo);
+      }
+
+      DOM.stepSlider.max = Math.max(0, State.steps.length - 1);
+    }
+
+    function goToStep(index) {
+      if (index < 0) index = 0;
+      if (index >= State.steps.length) index = State.steps.length - 1;
+
+      State.currentStepIndex = index;
+      DOM.stepSlider.value = index;
+      DOM.stepCounter.textContent = 'Bước: ' + (index + 1) + ' / ' + State.steps.length;
+
+      renderStep(State.steps[index]);
+    }
+
+    function nextStep() {
+      if (State.currentStepIndex < State.steps.length - 1) {
+        goToStep(State.currentStepIndex + 1);
+      } else {
+        pause();
+      }
+    }
+
+    function prevStep() {
+      if (State.currentStepIndex > 0) {
+        goToStep(State.currentStepIndex - 1);
+      }
+    }
+
+    function play() {
+      if (State.isPlaying) return;
+      State.isPlaying = true;
+      DOM.btnPlay.textContent = '⏸ Tạm dừng';
+      DOM.btnPlay.classList.replace('btn-primary', 'btn-danger');
+
+      State.playTimer = setInterval(() => {
+        if (State.currentStepIndex >= State.steps.length - 1) {
+          pause();
+        } else {
+          nextStep();
+        }
+      }, State.speed);
+    }
+
+    function pause() {
+      State.isPlaying = false;
+      DOM.btnPlay.textContent = '▶ Tự chạy';
+      DOM.btnPlay.classList.replace('btn-danger', 'btn-primary');
+      if (State.playTimer) clearInterval(State.playTimer);
+    }
+
+    function togglePlay() {
+      if (State.isPlaying) pause();
+      else play();
+    }
+
+    function buildControlsForTab(tabKey) {
+      DOM.algoSelectArea.innerHTML = '';
+      DOM.inputArea.innerHTML = '';
+
+      if (tabKey === 'clo') {
+        renderCLOMatrix();
+        return;
+      }
+
+      DOM.mainGrid.style.display = 'grid';
+      DOM.playbackBar.style.display = 'flex';
+      DOM.theoryCard.style.display = 'flex';
+
+      const algos = Object.entries(AlgoMeta).filter(([k, v]) => v.category === tabKey);
+
+      const label = document.createElement('label');
+      label.textContent = 'Chọn giải thuật:';
+      const select = document.createElement('select');
+      select.id = 'algoDropdown';
+
+      algos.forEach(([k, v]) => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = v.name;
+        select.appendChild(opt);
+      });
+
+      select.addEventListener('change', (e) => {
+        initAlgorithm(e.target.value);
+      });
+
+      DOM.algoSelectArea.appendChild(label);
+      DOM.algoSelectArea.appendChild(select);
+
+      if (tabKey === 'search' || tabKey === 'sort') {
+        const inputData = document.createElement('input');
+        inputData.type = 'text';
+        inputData.placeholder = 'Mảng (vd: 25, 10, 7, 30)';
+        inputData.value = State.data.join(', ');
+        inputData.style.width = '180px';
+
+        const btnRandom = document.createElement('button');
+        btnRandom.textContent = '🎲 Ngẫu nhiên';
+        btnRandom.addEventListener('click', () => {
+          State.data = Array.from({ length: 8 }, () => Math.floor(Math.random() * 80) + 5);
+          inputData.value = State.data.join(', ');
+          generateSteps();
+          goToStep(0);
+        });
+
+        inputData.addEventListener('change', () => {
+          const parts = inputData.value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+          if (parts.length > 0) {
+            State.data = parts;
+            generateSteps();
+            goToStep(0);
+          }
+        });
+
+        DOM.inputArea.appendChild(inputData);
+        DOM.inputArea.appendChild(btnRandom);
+
+        if (tabKey === 'search') {
+          const targetInput = document.createElement('input');
+          targetInput.type = 'number';
+          targetInput.value = State.targetVal;
+          targetInput.style.width = '70px';
+          targetInput.placeholder = 'Tìm X';
+          targetInput.addEventListener('change', (e) => {
+            State.targetVal = parseInt(e.target.value) || 0;
+            generateSteps();
+            goToStep(0);
+          });
+          DOM.inputArea.appendChild(document.createTextNode(' Tìm X: '));
+          DOM.inputArea.appendChild(targetInput);
+        }
+      } else if (tabKey === 'linkedlist') {
+        const valInput = document.createElement('input');
+        valInput.type = 'number';
+        valInput.value = 25;
+        valInput.style.width = '70px';
+        valInput.placeholder = 'Giá trị';
+
+        const btnAdd = document.createElement('button');
+        btnAdd.className = 'btn-primary';
+        btnAdd.textContent = '➕ Thêm Node';
+        btnAdd.onclick = () => {
+          const v = parseInt(valInput.value) || Math.floor(Math.random()*89)+10;
+          if (State.currentAlgo === 'll_sandbox') {
+            LinkedListSandbox.addNode(v);
+          } else {
+            State.targetVal = v;
+            generateSteps();
+            goToStep(0);
+          }
+        };
+
+        const btnNull = document.createElement('button');
+        btnNull.textContent = '⬛ Thêm NULL';
+        btnNull.onclick = () => {
+          if (State.currentAlgo === 'll_sandbox') {
+            LinkedListSandbox.addNullBlock();
+          }
+        };
+
+        const btnSetHead = document.createElement('button');
+        btnSetHead.textContent = '👑 Đặt làm HEAD';
+        btnSetHead.onclick = () => {
+          if (State.currentAlgo === 'll_sandbox') {
+            LinkedListSandbox.setHeadSelected();
+          } else {
+            alert('Chỉ áp dụng trong chế độ Sandbox.');
+          }
+        };
+
+        const btnTraverse = document.createElement('button');
+        btnTraverse.className = 'btn-success';
+        btnTraverse.textContent = '▶ Chạy Duyệt';
+        btnTraverse.onclick = () => {
+          if (State.currentAlgo === 'll_sandbox') {
+            LinkedListSandbox.runTraverse();
+          } else {
+            play();
+          }
+        };
+
+        const btnDelete = document.createElement('button');
+        btnDelete.className = 'btn-danger';
+        btnDelete.textContent = '🗑 Xóa Chọn';
+        btnDelete.onclick = () => {
+          if (State.currentAlgo === 'll_sandbox') {
+            LinkedListSandbox.deleteSelected();
+          }
+        };
+
+        const btnResetSandbox = document.createElement('button');
+        btnResetSandbox.textContent = '🔄 Đặt lại';
+        btnResetSandbox.onclick = () => {
+          if (State.currentAlgo === 'll_sandbox') {
+            const canvas = document.getElementById('sandboxCanvas');
+            if (canvas) LinkedListSandbox.init(canvas);
+          } else {
+            generateSteps();
+            goToStep(0);
+          }
+        };
+
+        DOM.inputArea.appendChild(document.createTextNode(' Giá trị: '));
+        DOM.inputArea.appendChild(valInput);
+        DOM.inputArea.appendChild(btnAdd);
+        DOM.inputArea.appendChild(btnNull);
+        DOM.inputArea.appendChild(btnSetHead);
+        DOM.inputArea.appendChild(btnTraverse);
+        DOM.inputArea.appendChild(btnDelete);
+        DOM.inputArea.appendChild(btnResetSandbox);
+      }
+
+      initAlgorithm(algos[0][0]);
+    }
+
+    function renderCLOMatrix() {
+      DOM.playbackBar.style.display = 'none';
+      DOM.theoryCard.style.display = 'none';
+      DOM.mainGrid.style.display = 'block';
+      DOM.stageCanvas.innerHTML = '';
+
+      const cloHtml = `
+        <div class="clo-matrix">
+          <div class="clo-card">
+            <div class="clo-card-header">
+              <span class="clo-card-title">CLO 1: Làm việc nhóm & Bài tập lớn</span>
+              <span class="clo-tag">PI 3.3</span>
+            </div>
+            <div class="clo-card-desc">Phối hợp nhóm thực hiện bài tập lớn, phân chia thiết kế CTDL và giải thuật.</div>
+          </div>
+          <div class="clo-card">
+            <div class="clo-card-header">
+              <span class="clo-card-title">CLO 2: Vận dụng kiến thức cơ bản CTDL</span>
+              <span class="clo-tag">PI 5.2</span>
+            </div>
+            <div class="clo-card-desc">Vận dụng lưu trữ dữ liệu, mô phỏng sinh động các giải thuật sắp xếp, tìm kiếm.</div>
+          </div>
+          <div class="clo-card">
+            <div class="clo-card-header">
+              <span class="clo-card-title">CLO 3: Lựa chọn CTDL phù hợp bài toán</span>
+              <span class="clo-tag">PI 5.2</span>
+            </div>
+            <div class="clo-card-desc">Lựa chọn tối ưu giữa DSLK, Stack (RPN), Queue (BFS), Cây BST/AVL hay Bảng băm.</div>
+          </div>
+          <div class="clo-card">
+            <div class="clo-card-header">
+              <span class="clo-card-title">CLO 4: Cài đặt giải thuật Tìm kiếm & Sắp xếp</span>
+              <span class="clo-tag">PI 5.3</span>
+            </div>
+            <div class="clo-card-desc">Cài đặt 8 thuật toán sắp xếp (đặc biệt: Merge, Heap, Quick) và tìm kiếm C++.</div>
+          </div>
+          <div class="clo-card">
+            <div class="clo-card-header">
+              <span class="clo-card-title">CLO 5: Cài đặt thao tác trên các CTDL</span>
+              <span class="clo-tag">PI 5.3</span>
+            </div>
+            <div class="clo-card-desc">Cài đặt Thêm, Xóa, Tìm kiếm, Duyệt trên DSLK, Cây BST, AVL và Bảng băm.</div>
+          </div>
+        </div>
+      `;
+
+      DOM.stageCanvas.innerHTML = cloHtml;
+    }
+
+    DOM.navTabs.addEventListener('click', (e) => {
+      const btn = e.target.closest('.nav-tab-btn');
+      if (!btn) return;
+      DOM.navTabs.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      State.currentTab = btn.dataset.tab;
+      buildControlsForTab(State.currentTab);
+    });
+
+    DOM.btnPlay.addEventListener('click', togglePlay);
+    DOM.btnNext.addEventListener('click', () => { pause(); nextStep(); });
+    DOM.btnPrev.addEventListener('click', () => { pause(); prevStep(); });
+    DOM.btnFirst.addEventListener('click', () => { pause(); goToStep(0); });
+    DOM.btnLast.addEventListener('click', () => { pause(); goToStep(State.steps.length - 1); });
+    DOM.btnReset.addEventListener('click', () => { pause(); generateSteps(); goToStep(0); });
+
+    DOM.stepSlider.addEventListener('input', (e) => {
+      pause();
+      goToStep(parseInt(e.target.value));
+    });
+
+    DOM.speedSlider.addEventListener('input', (e) => {
+      State.speed = 2100 - parseInt(e.target.value);
+      DOM.speedVal.textContent = (State.speed / 1000).toFixed(1) + 's';
+      if (State.isPlaying) {
+        pause();
+        play();
+      }
+    });
+
+    const btnCopyCpp = document.getElementById('btnCopyCpp');
+    if (btnCopyCpp) {
+      btnCopyCpp.addEventListener('click', () => {
+        const lineElements = DOM.codeContainer.querySelectorAll('.code-line span:last-child');
+        const codeText = Array.from(lineElements).map(el => el.textContent).join('\n');
+        if (codeText) {
+          navigator.clipboard.writeText(codeText).then(() => {
+            const prev = btnCopyCpp.textContent;
+            btnCopyCpp.textContent = '✅ Đã chép!';
+            setTimeout(() => { btnCopyCpp.textContent = prev; }, 1800);
+          }).catch(() => {
+            alert('Đã chọn mã! Bạn có thể nhấn Ctrl+C để sao chép.');
+          });
+        }
+      });
+    }
+
+    buildControlsForTab('search');
+  </script>
+</body>
+</html>
