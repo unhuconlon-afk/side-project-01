@@ -780,6 +780,135 @@
       white-space: nowrap;
     }
 
+    /* RADIX SORT 10-BUCKET SPECIAL RACK */
+    .radix-special-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 950px;
+      margin: 0 auto;
+    }
+    .radix-badge-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #141e33;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .radix-array-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 12px;
+      background: #141e33;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      min-height: 75px;
+      align-items: center;
+    }
+    .radix-card {
+      padding: 8px 14px;
+      border-radius: 6px;
+      background: #1e293b;
+      border: 2px solid var(--border-color);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .radix-card.active-scan {
+      border-color: #38bdf8;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+      transform: translateY(-5px);
+      background: #0284c7;
+      color: #fff;
+    }
+    .radix-card.just-collected {
+      border-color: #a855f7;
+      background: #7e22ce;
+      color: #fff;
+    }
+    .radix-card.sorted {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+    }
+    .radix-digit-active {
+      color: #f59e0b;
+      text-decoration: underline 3px;
+      font-size: 1.2em;
+    }
+    .radix-card.active-scan .radix-digit-active {
+      color: #fef08a;
+    }
+    .radix-buckets-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      width: 100%;
+    }
+    .radix-bucket-box {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 3px;
+      display: flex;
+      flex-direction: column;
+      min-height: 125px;
+      transition: all 0.2s;
+    }
+    .radix-bucket-box.active-bucket {
+      border-color: #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+      background: rgba(245, 158, 11, 0.12);
+      transform: translateY(-2px);
+    }
+    .radix-bucket-header {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+    .radix-bucket-box.active-bucket .radix-bucket-header {
+      color: #f59e0b;
+    }
+    .radix-bucket-items {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+      align-items: center;
+      flex: 1;
+    }
+    .radix-bucket-chip {
+      background: #334155;
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      width: 95%;
+      text-align: center;
+      animation: fadeIn 0.2s ease-in;
+    }
+    .radix-bucket-chip.active-chip {
+      background: #f59e0b;
+      color: #000;
+    }
+
     /* LINKED LIST, STACK, QUEUE, TREE STYLES */
     .linked-list-stage { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 20px; width: 100%; }
     .ll-node { display: flex; border: 2px solid var(--accent-primary); border-radius: 8px; overflow: hidden; background: #0f172a; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); position: relative; }
@@ -1501,6 +1630,65 @@
       "    for (int x : a) cout << x << \" \"; cout << endl;",
       "    return 0;",
       "}"
+    ]
+  },
+  "radix_sort": {
+    "name": "Radix Sort (⭐ Trực quan Giá Đỡ 10 Thùng Chữ Số - LSD)",
+    "category": "sort",
+    "best": "O(d*(N+k))",
+    "avg": "O(d*(N+k))",
+    "worst": "O(d*(N+k))",
+    "space": "O(N+k)",
+    "stable": "Có (Stable)",
+    "code": [
+      "#include <iostream>",
+      "#include <vector>",
+      "#include <algorithm>",
+      "using namespace std;",
+      "",
+      "// 1. Hàm tìm giá trị lớn nhất trong mảng",
+      "int getMax(int a[], int n) {",
+      "    int mx = a[0];",
+      "    for (int i = 1; i < n; i++)",
+      "        if (a[i] > mx) mx = a[i];",
+      "    return mx;",
+      "}",
+      "",
+      "// 2. Đếm & phân phối theo chữ số tại vị trí exp (1, 10, 100,...)",
+      "void countSort(int a[], int n, int exp) {",
+      "    vector<int> output(n);",
+      "    int count[10] = {0};",
+      "    for (int i = 0; i < n; i++)",
+      "        count[(a[i] / exp) % 10]++;",
+      "    for (int i = 1; i < 10; i++)",
+      "        count[i] += count[i - 1];",
+      "    for (int i = n - 1; i >= 0; i--) {",
+      "        int digit = (a[i] / exp) % 10;",
+      "        output[count[digit] - 1] = a[i];",
+      "        count[digit]--;",
+      "    }",
+      "    for (int i = 0; i < n; i++)",
+      "        a[i] = output[i];",
+      "}",
+      "",
+      "// 3. Thuật toán Radix Sort (LSD)",
+      "void radixSort(int a[], int n) {",
+      "    int m = getMax(a, n); // Tìm max để biết số chữ số",
+      "    for (int exp = 1; m / exp > 0; exp *= 10)",
+      "        countSort(a, n, exp);",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {170, 45, 75, 90, 802, 24, 2, 66};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau:\\n\";",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \"; cout << endl;",
+      "    radixSort(a, n);",
+      "    cout << \"Sau khi Radix Sort:\\n\";",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \"; cout << endl;",
+      "    return 0;",
+      "}",
+      ""
     ]
   },
   "ll_sandbox": {
@@ -2751,6 +2939,175 @@
       return steps;
     }
 
+    /* SPECIAL 4: RADIX SORT (LSD 10-BUCKET DISTRIBUTION & GATHERING) */
+    function generateRadixSortSteps(origArr) {
+      const a = (origArr && origArr.length > 0)
+        ? origArr.map(x => Math.abs(parseInt(x) || 0))
+        : [170, 45, 75, 90, 802, 24, 2, 66];
+      const steps = [];
+      const n = a.length;
+      const maxVal = Math.max(...a);
+      const numDigits = maxVal === 0 ? 1 : Math.floor(Math.log10(maxVal)) + 1;
+      let passCount = 0;
+
+      steps.push({
+        type: 'radix_special',
+        arr: [...a],
+        exp: 1,
+        digitName: 'Hàng Đơn Vị (10⁰)',
+        maxVal: maxVal,
+        numDigits: numDigits,
+        scanningIdx: -1,
+        activeBucket: -1,
+        buckets: Array.from({ length: 10 }, () => []),
+        collectedIndices: [],
+        phase: 'init',
+        pass: 0,
+        desc: 'Bắt đầu Radix Sort (LSD). Giá trị lớn nhất Max = ' + maxVal + ' (' + numDigits + ' chữ số). Thuật toán sẽ thực hiện ' + numDigits + ' lượt (Pass) phân phối vào 10 thùng (0-9) rồi thu gom tuần tự.',
+        codeLines: [31, 32, 6, 7, 8, 9, 10],
+        vars: { 'Max': maxVal, 'Số chữ số d': numDigits, 'Cơ số (Base)': 10, 'Trạng thái': 'Bắt đầu' }
+      });
+
+      for (let exp = 1; Math.floor(maxVal / exp) > 0; exp *= 10) {
+        passCount++;
+        let digitName = 'Hàng Đơn Vị (10⁰ = 1)';
+        if (exp === 10) digitName = 'Hàng Chục (10¹ = 10)';
+        else if (exp === 100) digitName = 'Hàng Trăm (10² = 100)';
+        else if (exp === 1000) digitName = 'Hàng Nghìn (10³ = 1000)';
+        else if (exp > 1000) digitName = 'Hàng 10^' + Math.round(Math.log10(exp));
+
+        const buckets = Array.from({ length: 10 }, () => []);
+
+        steps.push({
+          type: 'radix_special',
+          arr: [...a],
+          exp: exp,
+          digitName: digitName,
+          maxVal: maxVal,
+          numDigits: numDigits,
+          scanningIdx: -1,
+          activeBucket: -1,
+          buckets: buckets.map(b => [...b]),
+          collectedIndices: [],
+          phase: 'start_pass',
+          pass: passCount,
+          desc: '--- PASS ' + passCount + ': Xét chữ số ' + digitName + ' (exp = ' + exp + '). Chuẩn bị phân phối ' + n + ' phần tử vào 10 thùng (0-9).',
+          codeLines: [33, 34, 14, 15, 16],
+          vars: { 'Pass': passCount, 'exp': exp, 'Chữ số đang xét': digitName, 'Hành động': 'Mở 10 thùng rỗng' }
+        });
+
+        for (let i = 0; i < n; i++) {
+          const val = a[i];
+          const digit = Math.floor(val / exp) % 10;
+          buckets[digit].push(val);
+
+          steps.push({
+            type: 'radix_special',
+            arr: [...a],
+            exp: exp,
+            digitName: digitName,
+            maxVal: maxVal,
+            numDigits: numDigits,
+            scanningIdx: i,
+            activeBucket: digit,
+            buckets: buckets.map(b => [...b]),
+            collectedIndices: [],
+            phase: 'distribute',
+            pass: passCount,
+            desc: 'Phần tử A[' + i + '] = ' + val + ': Chữ số ' + digitName + ' là ' + digit + '. Thả ' + val + ' vào Thùng [' + digit + '].',
+            codeLines: [17, 18],
+            vars: { 'A[i]': val, 'Chữ số trích xuất': digit, 'Thùng nhận': '[' + digit + ']', ['Thùng ' + digit + ' hiện có']: buckets[digit].join(', ') }
+          });
+        }
+
+        steps.push({
+          type: 'radix_special',
+          arr: [...a],
+          exp: exp,
+          digitName: digitName,
+          maxVal: maxVal,
+          numDigits: numDigits,
+          scanningIdx: -1,
+          activeBucket: -1,
+          buckets: buckets.map(b => [...b]),
+          collectedIndices: [],
+          phase: 'start_collect',
+          pass: passCount,
+          desc: 'Đã phân phối xong Pass ' + passCount + '. Bắt đầu thu gom (Collect) tuần tự từ Thùng 0 đến Thùng 9 về mảng chính theo thứ tự FIFO để đảm bảo tính ổn định (Stable).',
+          codeLines: [19, 20, 21, 22, 23, 24],
+          vars: { 'Tổng phần tử trong thùng': n, 'Hành động': 'Thu gom tuần tự Thùng 0 -> 9' }
+        });
+
+        let k = 0;
+        const collectedIndices = [];
+        for (let b = 0; b < 10; b++) {
+          while (buckets[b].length > 0) {
+            const item = buckets[b].shift();
+            a[k] = item;
+            collectedIndices.push(k);
+
+            steps.push({
+              type: 'radix_special',
+              arr: [...a],
+              exp: exp,
+              digitName: digitName,
+              maxVal: maxVal,
+              numDigits: numDigits,
+              scanningIdx: -1,
+              activeBucket: b,
+              buckets: buckets.map(bk => [...bk]),
+              collectedIndices: [...collectedIndices],
+              phase: 'collecting',
+              pass: passCount,
+              desc: 'Gom phần tử ' + item + ' từ Thùng [' + b + '] xếp vào mảng tại vị trí A[' + k + '].',
+              codeLines: [26, 27],
+              vars: { 'Phần tử': item, 'Từ Thùng': '[' + b + ']', 'Xếp vào': 'A[' + k + ']' }
+            });
+
+            k++;
+          }
+        }
+
+        steps.push({
+          type: 'radix_special',
+          arr: [...a],
+          exp: exp,
+          digitName: digitName,
+          maxVal: maxVal,
+          numDigits: numDigits,
+          scanningIdx: -1,
+          activeBucket: -1,
+          buckets: Array.from({ length: 10 }, () => []),
+          collectedIndices: a.map((_, idx) => idx),
+          phase: 'end_pass',
+          pass: passCount,
+          desc: '✅ Kết thúc Pass ' + passCount + ': Toàn bộ mảng đã có thứ tự ổn định theo ' + digitName + ': [' + a.join(', ') + '].',
+          codeLines: [33],
+          vars: { ['Mảng sau Pass ' + passCount]: '[' + a.join(', ') + ']', 'Chữ số hoàn tất': digitName }
+        });
+      }
+
+      steps.push({
+        type: 'radix_special',
+        arr: [...a],
+        exp: 1,
+        digitName: 'Hoàn tất',
+        maxVal: maxVal,
+        numDigits: numDigits,
+        scanningIdx: -1,
+        activeBucket: -1,
+        buckets: Array.from({ length: 10 }, () => []),
+        collectedIndices: a.map((_, idx) => idx),
+        phase: 'done',
+        pass: passCount,
+        desc: '🎉 Hoàn thành Radix Sort! Trải qua ' + passCount + ' lượt phân phối và thu gom chữ số, mảng đã được sắp xếp tăng dần hoàn chỉnh: [' + a.join(', ') + '].',
+        codeLines: [31, 35],
+        vars: { 'Trạng thái': 'Hoàn tất 100%', 'Mảng tăng dần': a.join(', ') }
+      });
+
+      return steps;
+    }
+
     /* LINKED LIST, STACK, QUEUE, TREE, HASH GENERATORS */
     function generateLinkedListSteps(algo, valToInsertOrDelete) {
       const steps = [];
@@ -3182,6 +3539,8 @@
         renderHeapSortSpecial(step);
       } else if (step.type === 'quick_special') {
         renderQuickSortSpecial(step);
+      } else if (step.type === 'radix_special') {
+        renderRadixSortSpecial(step);
       } else if (step.type === 'array') {
         renderArrayBars(step);
       } else if (step.type === 'linkedlist') {
@@ -3514,6 +3873,116 @@
 
       wrapper.appendChild(slotsRow);
       container.appendChild(wrapper);
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    /* SPECIAL RENDERER 4: RADIX SORT 10-BUCKET RACK */
+    function renderRadixSortSpecial(step) {
+      const container = document.createElement('div');
+      container.className = 'radix-special-container';
+
+      // 1. Badge Bar (Exp and Digit Name)
+      const badgeBar = document.createElement('div');
+      badgeBar.className = 'radix-badge-bar';
+      badgeBar.innerHTML = '<div style="display:flex; align-items:center; gap:8px;">' +
+        '<span style="background:var(--accent-primary); color:#0f172a; padding:3px 8px; border-radius:4px; font-weight:800; font-size:0.75rem;">RADIX LSD</span>' +
+        '<span style="color:#e2e8f0; font-weight:700;">' + (step.digitName || 'Khởi tạo') + '</span>' +
+        '<span style="color:var(--text-muted); font-size:0.75rem;">(exp = ' + step.exp + ')</span>' +
+      '</div>' +
+      '<div style="display:flex; align-items:center; gap:12px; font-size:0.75rem;">' +
+        '<span style="color:#38bdf8;">■ Số đang xét</span>' +
+        '<span style="color:#f59e0b;">■ Chữ số mục tiêu</span>' +
+        '<span style="color:#a855f7;">■ Đã gom về mảng</span>' +
+      '</div>';
+      container.appendChild(badgeBar);
+
+      // 2. Main Array Strip
+      const arrayRow = document.createElement('div');
+      arrayRow.className = 'radix-array-row';
+
+      step.arr.forEach((val, idx) => {
+        const card = document.createElement('div');
+        card.className = 'radix-card';
+
+        const isScanning = idx === step.scanningIdx;
+        const isCollected = step.collectedIndices && step.collectedIndices.includes(idx);
+        const isDone = step.phase === 'done';
+
+        if (isDone) {
+          card.classList.add('sorted');
+        } else if (isScanning) {
+          card.classList.add('active-scan');
+        } else if (isCollected) {
+          card.classList.add('just-collected');
+        }
+
+        const strVal = String(val);
+        const digitPosFromRight = Math.round(Math.log10(step.exp || 1));
+        const digitIndex = strVal.length - 1 - digitPosFromRight;
+
+        let formattedNumber = '';
+        if (digitIndex >= 0 && digitIndex < strVal.length) {
+          formattedNumber = strVal.substring(0, digitIndex) +
+            '<span class="radix-digit-active">' + strVal[digitIndex] + '</span>' +
+            strVal.substring(digitIndex + 1);
+        } else if (digitIndex < 0 && step.phase !== 'init' && step.phase !== 'done') {
+          formattedNumber = '<span class="radix-digit-active">0</span>' + strVal;
+        } else {
+          formattedNumber = strVal;
+        }
+
+        card.innerHTML = '<span>' + formattedNumber + '</span>' +
+          '<span style="font-size:0.65rem; opacity:0.7; margin-top:2px;">[' + idx + ']</span>';
+
+        arrayRow.appendChild(card);
+      });
+
+      container.appendChild(arrayRow);
+
+      // 3. 10-Bucket Grid
+      const bucketGrid = document.createElement('div');
+      bucketGrid.className = 'radix-buckets-grid';
+
+      for (let b = 0; b < 10; b++) {
+        const bBox = document.createElement('div');
+        bBox.className = 'radix-bucket-box';
+        if (step.activeBucket === b) {
+          bBox.classList.add('active-bucket');
+        }
+
+        const header = document.createElement('div');
+        header.className = 'radix-bucket-header';
+        header.innerHTML = 'Thùng <strong>[' + b + ']</strong>';
+        bBox.appendChild(header);
+
+        const itemsWrap = document.createElement('div');
+        itemsWrap.className = 'radix-bucket-items';
+
+        const bucketItems = (step.buckets && step.buckets[b]) ? step.buckets[b] : [];
+        if (bucketItems.length === 0) {
+          const emptyLabel = document.createElement('span');
+          emptyLabel.style.fontSize = '0.65rem';
+          emptyLabel.style.color = '#475569';
+          emptyLabel.style.margin = 'auto';
+          emptyLabel.textContent = 'Trống';
+          itemsWrap.appendChild(emptyLabel);
+        } else {
+          bucketItems.forEach((item, itemIdx) => {
+            const chip = document.createElement('div');
+            chip.className = 'radix-bucket-chip';
+            if (step.activeBucket === b && itemIdx === bucketItems.length - 1 && step.phase === 'distribute') {
+              chip.classList.add('active-chip');
+            }
+            chip.textContent = item;
+            itemsWrap.appendChild(chip);
+          });
+        }
+
+        bBox.appendChild(itemsWrap);
+        bucketGrid.appendChild(bBox);
+      }
+
+      container.appendChild(bucketGrid);
       DOM.stageCanvas.appendChild(container);
     }
 
@@ -4858,6 +5327,7 @@ function initAlgorithm(algoKey) {
         else if (algo === 'merge_sort') State.steps = generateMergeSortSpecialSteps(State.data);
         else if (algo === 'heap_sort') State.steps = generateHeapSortSpecialSteps(State.data);
         else if (algo === 'quick_sort') State.steps = generateQuickSortSpecialSteps(State.data);
+        else if (algo === 'radix_sort') State.steps = generateRadixSortSteps(State.data);
       }
       else if (meta.category === 'linkedlist') {
         State.steps = generateLinkedListSteps(algo, State.targetVal);
@@ -4955,6 +5425,13 @@ function initAlgorithm(algoKey) {
       });
 
       select.addEventListener('change', (e) => {
+        if (e.target.value === 'radix_sort') {
+          if (State.data.every(x => x < 100)) {
+            State.data = [170, 45, 75, 90, 802, 24, 2, 66];
+            const inp = DOM.inputArea.querySelector('input[type="text"]');
+            if (inp) inp.value = State.data.join(', ');
+          }
+        }
         initAlgorithm(e.target.value);
       });
 
@@ -4971,7 +5448,11 @@ function initAlgorithm(algoKey) {
         const btnRandom = document.createElement('button');
         btnRandom.textContent = '🎲 Ngẫu nhiên';
         btnRandom.addEventListener('click', () => {
-          State.data = Array.from({ length: 8 }, () => Math.floor(Math.random() * 80) + 5);
+          if (State.currentAlgo === 'radix_sort') {
+            State.data = Array.from({ length: 8 }, () => Math.floor(Math.random() * 890) + 10);
+          } else {
+            State.data = Array.from({ length: 8 }, () => Math.floor(Math.random() * 80) + 5);
+          }
           inputData.value = State.data.join(', ');
           generateSteps();
           goToStep(0);
@@ -5121,7 +5602,7 @@ function initAlgorithm(algoKey) {
               <span class="clo-card-title">CLO 4: Cài đặt giải thuật Tìm kiếm & Sắp xếp</span>
               <span class="clo-tag">PI 5.3</span>
             </div>
-            <div class="clo-card-desc">Cài đặt 8 thuật toán sắp xếp (đặc biệt: Merge, Heap, Quick) và tìm kiếm C++.</div>
+            <div class="clo-card-desc">Cài đặt 9 thuật toán sắp xếp (đặc biệt: Merge, Heap, Quick, Radix) và tìm kiếm C++.</div>
           </div>
           <div class="clo-card">
             <div class="clo-card-header">
