@@ -780,6 +780,115 @@
       white-space: nowrap;
     }
 
+    /* QUICK SORT SCHEME SWITCHER & HOARE SPECIAL STYLES */
+    .quick-scheme-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .quick-scheme-btn {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #94a3b8;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .quick-scheme-btn:hover {
+      background: #334155;
+      color: #fff;
+      border-color: #64748b;
+    }
+
+    .quick-scheme-btn.active {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+
+    .quick-scheme-btn.active.lomuto {
+      background: linear-gradient(135deg, #7e22ce, #a855f7);
+      border-color: #c084fc;
+      box-shadow: 0 0 12px rgba(192, 132, 252, 0.4);
+    }
+
+    .quick-hoare-info-banner {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quick-slot.zone-hoare-i {
+      border-color: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    .quick-slot.zone-hoare-j {
+      border-color: #f59e0b;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+
+    .quick-slot.zone-swapping {
+      border-color: #f43f5e;
+      background: rgba(244, 63, 94, 0.25);
+      color: #f43f5e;
+      transform: scale(1.08) translateY(-4px);
+      box-shadow: 0 8px 20px rgba(244, 63, 94, 0.5);
+    }
+
+    .quick-slot.zone-hoare-left {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+    }
+
+    .quick-slot.zone-hoare-right {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: #a855f7;
+    }
+
+    .hoare-split-divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      color: #38bdf8;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+
+    .hoare-split-line {
+      width: 2px;
+      height: 48px;
+      background: linear-gradient(to bottom, #38bdf8, #a855f7);
+      margin: 2px 0;
+      border-radius: 1px;
+    }
+
     /* RADIX SORT 10-BUCKET SPECIAL RACK */
     .radix-special-container {
       display: flex;
@@ -1051,7 +1160,7 @@
   <!-- NAVIGATION TABS -->
   <nav class="nav-tabs" id="navTabs">
     <button class="nav-tab-btn active" data-tab="search">🔍 1. Tìm Kiếm</button>
-    <button class="nav-tab-btn" data-tab="sort">⚡ 2. Sắp Xếp (8 Thuật Toán)</button>
+    <button class="nav-tab-btn" data-tab="sort">⚡ 2. Sắp Xếp (11 Thuật Toán - Có Shaker Sort)</button>
     <button class="nav-tab-btn" data-tab="linkedlist">🔗 3. Danh Sách Liên Kết</button>
     <button class="nav-tab-btn" data-tab="stackqueue">📚 4. Ngăn Xếp & Hàng Đợi (RPN)</button>
     <button class="nav-tab-btn" data-tab="trees">🌳 5. Cây Nhị Phân & AVL</button>
@@ -1283,45 +1392,6 @@
       "}"
     ]
   },
-  "bubble_sort": {
-    "name": "Bubble Sort (Nổi bọt cơ bản)",
-    "category": "sort",
-    "best": "O(N^2)",
-    "avg": "O(N^2)",
-    "worst": "O(N^2)",
-    "space": "O(1)",
-    "stable": "Có (Stable)",
-    "codeOffset": 9,
-    "code": [
-      "#include <iostream>",
-      "using namespace std;",
-      "",
-      "void printArray(int a[], int n) {",
-      "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
-      "    cout << endl;",
-      "}",
-      "",
-      "// 1. Thuật toán Nổi Bọt cơ bản",
-      "void bubbleSort(int a[], int n) {",
-      "    for (int i = 0; i < n - 1; i++) {",
-      "        for (int j = 0; j < n - i - 1; j++) {",
-      "            if (a[j] > a[j + 1]) {",
-      "                swap(a[j], a[j + 1]); // Đổi chỗ nếu đứng sai thứ tự",
-      "            }",
-      "        }",
-      "    }",
-      "}",
-      "",
-      "int main() {",
-      "    int a[] = {64, 34, 25, 12, 22, 11, 90};",
-      "    int n = sizeof(a) / sizeof(a[0]);",
-      "    cout << \"Mang ban dau: \"; printArray(a, n);",
-      "    bubbleSort(a, n);",
-      "    cout << \"Sau khi Bubble Sort: \"; printArray(a, n);",
-      "    return 0;",
-      "}"
-    ]
-  },
   "bubble_sort_optimized": {
     "name": "Bubble Sort (Nổi bọt có cờ hiệu tối ưu)",
     "category": "sort",
@@ -1361,6 +1431,62 @@
       "    cout << \"Mang ban dau: \"; printArray(a, n);",
       "    bubbleSortOptimized(a, n);",
       "    cout << \"Ket qua: \"; printArray(a, n);",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "shaker_sort": {
+    "name": "Shaker Sort (Sắp xếp rung lắc / Nổi bọt 2 chiều)",
+    "category": "sort",
+    "best": "O(N)",
+    "avg": "O(N^2)",
+    "worst": "O(N^2)",
+    "space": "O(1)",
+    "stable": "Có (Stable)",
+    "codeOffset": 9,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "void printArray(int a[], int n) {",
+      "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
+      "    cout << endl;",
+      "}",
+      "",
+      "// 1. Thuật toán Shaker Sort (Cocktail Sort - Nổi bọt 2 chiều)",
+      "void shakerSort(int a[], int n) {",
+      "    int left = 0, right = n - 1;",
+      "    bool swapped = true;",
+      "    while (left < right && swapped) {",
+      "        swapped = false;",
+      "        // Lượt đi từ trái sang phải: Đưa phần tử lớn nhất về cuối",
+      "        for (int i = left; i < right; i++) {",
+      "            if (a[i] > a[i + 1]) {",
+      "                swap(a[i], a[i + 1]);",
+      "                swapped = true;",
+      "            }",
+      "        }",
+      "        right--; // Thu hẹp biên phải vì a[right] đã đúng vị trí",
+      "        if (!swapped) break;",
+      "",
+      "        swapped = false;",
+      "        // Lượt về từ phải sang trái: Đưa phần tử nhỏ nhất về đầu",
+      "        for (int i = right; i > left; i--) {",
+      "            if (a[i - 1] > a[i]) {",
+      "                swap(a[i - 1], a[i]);",
+      "                swapped = true;",
+      "            }",
+      "        }",
+      "        left++; // Thu hẹp biên trái vì a[left] đã đúng vị trí",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {25, 10, 7, 30, 15, 8, 42, 3};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau: \"; printArray(a, n);",
+      "    shakerSort(a, n);",
+      "    cout << \"Sau khi Shaker Sort: \"; printArray(a, n);",
       "    return 0;",
       "}"
     ]
@@ -1486,6 +1612,44 @@
       "}"
     ]
   },
+  "shell_sort": {
+    "name": "Shell Sort (Chèn theo khoảng cách)",
+    "category": "sort",
+    "best": "O(N log N)",
+    "avg": "Phụ thuộc dữ liệu và dãy gap",
+    "worst": "O(N²)",
+    "space": "O(1)",
+    "stable": "Không (Unstable)",
+    "codeOffset": 0,
+    "code": [
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "// Shell Sort: gap = n/2, n/4, ..., 1",
+        "void shellSort(int a[], int n) {",
+        "    for (int gap = n / 2; gap > 0; gap /= 2) {",
+        "        for (int i = gap; i < n; i++) {",
+        "            int key = a[i];",
+        "            int j = i;",
+        "            while (j >= gap && a[j - gap] > key) {",
+        "                a[j] = a[j - gap];",
+        "                j -= gap;",
+        "            }",
+        "            a[j] = key;",
+        "        }",
+        "    }",
+        "}",
+        "",
+        "int main() {",
+        "    int a[] = {35, 12, 43, 8, 51, 24, 6, 19};",
+        "    int n = sizeof(a) / sizeof(a[0]);",
+        "    shellSort(a, n);",
+        "    for (int i = 0; i < n; i++) cout << a[i] << \" \";",
+        "    cout << endl;",
+        "    return 0;",
+        "}"
+    ]
+},
   "merge_sort": {
     "name": "Merge Sort (⭐ Trực quan Giá Đỡ Trộn Mảng Con)",
     "category": "sort",
@@ -1584,8 +1748,8 @@
       "}"
     ]
   },
-  "quick_sort": {
-    "name": "Quick Sort (⭐ Trực quan 3 Phân Vùng Lomuto & Pivot)",
+  "quick_sort_lomuto": {
+    "name": "Quick Sort (Phân hoạch Lomuto - Chốt cuối mảng)",
     "category": "sort",
     "best": "O(N log N)",
     "avg": "O(N log N)",
@@ -1598,7 +1762,7 @@
       "using namespace std;",
       "",
       "// 1. Phân hoạch Lomuto với chốt pivot = a[high]",
-      "int partition(int a[], int low, int high) {",
+      "int partitionLomuto(int a[], int low, int high) {",
       "    int pivot = a[high];   // Chọn phần tử cuối làm pivot",
       "    int i = low - 1;       // Vùng các phần tử <= pivot",
       "    for (int j = low; j < high; j++) {",
@@ -1611,12 +1775,12 @@
       "    return i + 1;",
       "}",
       "",
-      "// 2. Quick Sort đệ quy chia để trị",
-      "void quickSort(int a[], int low, int high) {",
+      "// 2. Quick Sort đệ quy chia để trị (Lomuto)",
+      "void quickSortLomuto(int a[], int low, int high) {",
       "    if (low < high) {",
-      "        int pi = partition(a, low, high);",
-      "        quickSort(a, low, pi - 1);  // Sắp xếp nửa trái",
-      "        quickSort(a, pi + 1, high); // Sắp xếp nửa phải",
+      "        int pi = partitionLomuto(a, low, high);",
+      "        quickSortLomuto(a, low, pi - 1);  // Sắp xếp nửa trái",
+      "        quickSortLomuto(a, pi + 1, high); // Sắp xếp nửa phải",
       "    }",
       "}",
       "",
@@ -1625,8 +1789,55 @@
       "    int n = sizeof(a) / sizeof(a[0]);",
       "    cout << \"Mang ban dau:\\n\";",
       "    for (int x : a) cout << x << \" \"; cout << endl;",
-      "    quickSort(a, 0, n - 1);",
-      "    cout << \"Sau khi Quick Sort:\\n\";",
+      "    quickSortLomuto(a, 0, n - 1);",
+      "    cout << \"Sau khi Quick Sort (Lomuto):\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    return 0;",
+      "}"
+    ]
+  },
+  "quick_sort_hoare": {
+    "name": "Quick Sort (Phân hoạch Hoare - 2 con trỏ đối đầu)",
+    "category": "sort",
+    "best": "O(N log N)",
+    "avg": "O(N log N)",
+    "worst": "O(N^2)",
+    "space": "O(log N)",
+    "stable": "Không (Unstable)",
+    "codeOffset": 5,
+    "code": [
+      "#include <iostream>",
+      "using namespace std;",
+      "",
+      "// 1. Phân hoạch Hoare với chốt pivot = a[low]",
+      "int partitionHoare(int a[], int low, int high) {",
+      "    int pivot = a[low];   // Chọn phần tử đầu tiên làm pivot",
+      "    int i = low - 1;      // Con trỏ trái tiến sang phải",
+      "    int j = high + 1;     // Con trỏ phải lùi sang trái",
+      "    while (true) {",
+      "        do { i++; } while (a[i] < pivot); // Dò tìm phần tử a[i] >= pivot",
+      "        do { j--; } while (a[j] > pivot); // Dò tìm phần tử a[j] <= pivot",
+      "        if (i >= j) return j;             // 2 con trỏ va chạm -> dừng",
+      "        swap(a[i], a[j]);                 // Hoán đổi cặp nghịch thế",
+      "    }",
+      "}",
+      "",
+      "// 2. Quick Sort đệ quy chia để trị (Hoare)",
+      "void quickSortHoare(int a[], int low, int high) {",
+      "    if (low < high) {",
+      "        int pi = partitionHoare(a, low, high);",
+      "        quickSortHoare(a, low, pi);       // Nửa trái: [low..pi]",
+      "        quickSortHoare(a, pi + 1, high);  // Nửa phải: [pi+1..high]",
+      "    }",
+      "}",
+      "",
+      "int main() {",
+      "    int a[] = {70, 10, 80, 30, 90, 40, 50};",
+      "    int n = sizeof(a) / sizeof(a[0]);",
+      "    cout << \"Mang ban dau:\\n\";",
+      "    for (int x : a) cout << x << \" \"; cout << endl;",
+      "    quickSortHoare(a, 0, n - 1);",
+      "    cout << \"Sau khi Quick Sort (Hoare):\\n\";",
       "    for (int x : a) cout << x << \" \"; cout << endl;",
       "    return 0;",
       "}"
@@ -2384,6 +2595,253 @@
       return steps;
     }
 
+    /* SHAKER SORT (COCKTAIL SHAKER SORT - BIDIRECTIONAL BUBBLE SORT) */
+    function generateShakerSortSteps(origArr) {
+      if (!origArr || origArr.length === 0) return [];
+      const a = [...origArr];
+      const n = a.length;
+      const steps = [];
+      const sortedSet = new Set();
+
+      function getSortedMap() {
+        const map = {};
+        for (const idx of sortedSet) map[idx] = 'sorted';
+        return map;
+      }
+
+      steps.push({
+        type: 'array',
+        arr: [...a],
+        highlights: {},
+        pointers: { 0: 'left=0', [n - 1]: 'right=' + (n - 1) },
+        pass: 0,
+        desc: 'Bắt đầu Shaker Sort (Cocktail Sort / Nổi bọt 2 chiều). Khởi tạo biên trái left = 0, biên phải right = ' + (n - 1) + '. Thuật toán duyệt lắc qua lại 2 chiều: Lượt đi ➔ đẩy Max về cuối; Lượt về ⬅ kéo Min về đầu.',
+        codeLines: [9, 10, 11, 12],
+        vars: { 'Tổng phần tử': n, 'Biên trái left': 0, 'Biên phải right': n - 1, 'Trạng thái': 'Khởi tạo' }
+      });
+
+      if (n <= 1) {
+        if (n === 1) sortedSet.add(0);
+        steps.push({
+          type: 'array',
+          arr: [...a],
+          highlights: { 0: 'sorted' },
+          pointers: { 0: 'Đã chuẩn' },
+          pass: 0,
+          desc: 'Mảng chỉ có ' + n + ' phần tử, đã có thứ tự hoàn chỉnh!',
+          codeLine: 12,
+          vars: { 'Trạng thái': 'Hoàn tất 100%' }
+        });
+        return steps;
+      }
+
+      let left = 0;
+      let right = n - 1;
+      let pass = 0;
+      let swapped = true;
+
+      while (left < right && swapped) {
+        pass++;
+        swapped = false;
+
+        // ==================== LƯỢT ĐI: TRÁI SANG PHẢI ====================
+        steps.push({
+          type: 'array',
+          arr: [...a],
+          highlights: getSortedMap(),
+          pointers: { [left]: 'left=' + left, [right]: 'right=' + right },
+          pass: pass,
+          desc: '--- PASS ' + pass + ' (LƯỢT ĐI ➔): Quét từ left (' + left + ') đến right (' + right + ') để tìm phần tử lớn nhất và đẩy về cuối.',
+          codeLines: [13, 14, 15],
+          vars: { 'Pass': pass, 'Chiều quét': '➔ Trái sang Phải', left: left, right: right, swapped: 'false' }
+        });
+
+        for (let i = left; i < right; i++) {
+          const isGreater = a[i] > a[i + 1];
+          const curPointers = {};
+          if (left !== i && left !== i + 1) curPointers[left] = 'left';
+          if (right !== i && right !== i + 1) curPointers[right] = 'right';
+          curPointers[i] = (i === left ? 'left | i ➔' : 'i ➔');
+          curPointers[i + 1] = (i + 1 === right ? 'right | i+1' : 'i+1');
+
+          steps.push({
+            type: 'array',
+            arr: [...a],
+            highlights: { ...getSortedMap(), [i]: 'comparing', [i + 1]: 'comparing' },
+            pointers: curPointers,
+            pass: pass,
+            desc: 'Lượt đi ➔: So sánh A[' + i + '] = ' + a[i] + ' và A[' + (i + 1) + '] = ' + a[i + 1] + '. ' +
+              (isGreater ? 'A[' + i + '] > A[' + (i + 1) + '] -> Cần hoán đổi để đưa số lớn hơn về bên phải.'
+                         : 'A[' + i + '] ≤ A[' + (i + 1) + '] -> Đúng thứ tự, tiếp tục quét sang phải.'),
+            codeLines: [15, 16],
+            vars: { 'Chiều': '➔ Sang Phải', i: i, 'A[i]': a[i], 'A[i+1]': a[i + 1], 'Cần swap?': isGreater ? 'CÓ' : 'KHÔNG' }
+          });
+
+          if (isGreater) {
+            const temp = a[i];
+            a[i] = a[i + 1];
+            a[i + 1] = temp;
+            swapped = true;
+
+            const swapPointers = {};
+            if (left !== i && left !== i + 1) swapPointers[left] = 'left';
+            if (right !== i && right !== i + 1) swapPointers[right] = 'right';
+            swapPointers[i] = 'Swap';
+            swapPointers[i + 1] = 'Swap';
+
+            steps.push({
+              type: 'array',
+              arr: [...a],
+              highlights: { ...getSortedMap(), [i]: 'swapping', [i + 1]: 'swapping' },
+              pointers: swapPointers,
+              pass: pass,
+              desc: '⚡ Hoán đổi A[' + i + '] (' + a[i + 1] + ') ⇄ A[' + (i + 1) + '] (' + a[i] + '). Giá trị lớn (' + a[i + 1] + ') đang trôi dần về cuối mảng.',
+              codeLines: [17, 18],
+              vars: { 'Đã hoán đổi': a[i] + ' <-> ' + a[i + 1], swapped: 'true' }
+            });
+          }
+        }
+
+        // Cố định phần tử lớn nhất tại vị trí right
+        sortedSet.add(right);
+        const fixedRight = right;
+        right--;
+
+        steps.push({
+          type: 'array',
+          arr: [...a],
+          highlights: getSortedMap(),
+          pointers: { [fixedRight]: '🎯 Max chốt', [left]: 'left=' + left, [right]: 'right=' + right },
+          pass: pass,
+          desc: '🎯 Kết thúc lượt đi ➔: Phần tử lớn nhất trong đoạn đã về đúng vị trí A[' + fixedRight + '] = ' + a[fixedRight] + '. Thu hẹp biên phải right = ' + right + '.',
+          codeLines: [21],
+          vars: { 'Đã chốt Max': 'A[' + fixedRight + ']=' + a[fixedRight], 'right mới': right, swapped: swapped ? 'true' : 'false' }
+        });
+
+        if (!swapped) {
+          for (let k = 0; k < n; k++) sortedSet.add(k);
+          steps.push({
+            type: 'array',
+            arr: [...a],
+            highlights: getSortedMap(),
+            pointers: {},
+            pass: pass,
+            desc: '⚡ DỪNG SỚM (TỐI ƯU): Trong suốt lượt đi không xảy ra hoán đổi nào. Mảng ĐÃ CÓ THỨ TỰ HOÀN CHỈNH!',
+            codeLines: [22],
+            vars: { 'Dừng sớm': 'CÓ (swapped = false)', 'Trạng thái': 'Đã sắp xếp 100%' }
+          });
+          break;
+        }
+
+        if (left >= right) break;
+
+        // ==================== LƯỢT VỀ: PHẢI SANG TRÁI ====================
+        swapped = false;
+
+        steps.push({
+          type: 'array',
+          arr: [...a],
+          highlights: getSortedMap(),
+          pointers: { [left]: 'left=' + left, [right]: 'right=' + right },
+          pass: pass,
+          desc: '--- PASS ' + pass + ' (LƯỢT VỀ ⬅): Quét ngược từ right (' + right + ') về left (' + left + ') để tìm phần tử nhỏ nhất ("rùa") và kéo về đầu.',
+          codeLines: [24, 25, 26],
+          vars: { 'Pass': pass, 'Chiều quét': '⬅ Phải sang Trái', left: left, right: right, swapped: 'false' }
+        });
+
+        for (let i = right; i > left; i--) {
+          const isSmaller = a[i - 1] > a[i];
+          const curPointers = {};
+          if (left !== i && left !== i - 1) curPointers[left] = 'left';
+          if (right !== i && right !== i - 1) curPointers[right] = 'right';
+          curPointers[i - 1] = (i - 1 === left ? 'left | i-1' : 'i-1');
+          curPointers[i] = (i === right ? 'right | ⬅ i' : '⬅ i');
+
+          steps.push({
+            type: 'array',
+            arr: [...a],
+            highlights: { ...getSortedMap(), [i - 1]: 'comparing', [i]: 'comparing' },
+            pointers: curPointers,
+            pass: pass,
+            desc: 'Lượt về ⬅: So sánh A[' + (i - 1) + '] = ' + a[i - 1] + ' và A[' + i + '] = ' + a[i] + '. ' +
+              (isSmaller ? 'A[' + (i - 1) + '] > A[' + i + '] -> Cần hoán đổi để kéo số nhỏ hơn về bên trái.'
+                         : 'A[' + (i - 1) + '] ≤ A[' + i + '] -> Đúng thứ tự, tiếp tục quét sang trái.'),
+            codeLines: [26, 27],
+            vars: { 'Chiều': '⬅ Sang Trái', i: i, 'A[i-1]': a[i - 1], 'A[i]': a[i], 'Cần swap?': isSmaller ? 'CÓ' : 'KHÔNG' }
+          });
+
+          if (isSmaller) {
+            const temp = a[i - 1];
+            a[i - 1] = a[i];
+            a[i] = temp;
+            swapped = true;
+
+            const swapPointers = {};
+            if (left !== i && left !== i - 1) swapPointers[left] = 'left';
+            if (right !== i && right !== i - 1) swapPointers[right] = 'right';
+            swapPointers[i - 1] = 'Swap';
+            swapPointers[i] = 'Swap';
+
+            steps.push({
+              type: 'array',
+              arr: [...a],
+              highlights: { ...getSortedMap(), [i - 1]: 'swapping', [i]: 'swapping' },
+              pointers: swapPointers,
+              pass: pass,
+              desc: '⚡ Hoán đổi A[' + (i - 1) + '] (' + a[i] + ') ⇄ A[' + i + '] (' + a[i - 1] + '). Giá trị nhỏ (' + a[i - 1] + ') đang chìm dần về đầu mảng.',
+              codeLines: [28, 29],
+              vars: { 'Đã hoán đổi': a[i - 1] + ' <-> ' + a[i], swapped: 'true' }
+            });
+          }
+        }
+
+        // Cố định phần tử nhỏ nhất tại vị trí left
+        sortedSet.add(left);
+        const fixedLeft = left;
+        left++;
+
+        steps.push({
+          type: 'array',
+          arr: [...a],
+          highlights: getSortedMap(),
+          pointers: { [fixedLeft]: '🎯 Min chốt', [left]: 'left=' + left, [right]: 'right=' + right },
+          pass: pass,
+          desc: '🎯 Kết thúc lượt về ⬅: Phần tử nhỏ nhất trong đoạn đã về đúng vị trí A[' + fixedLeft + '] = ' + a[fixedLeft] + '. Thu hẹp biên trái left = ' + left + '.',
+          codeLines: [32],
+          vars: { 'Đã chốt Min': 'A[' + fixedLeft + ']=' + a[fixedLeft], 'left mới': left, swapped: swapped ? 'true' : 'false' }
+        });
+
+        if (!swapped) {
+          for (let k = 0; k < n; k++) sortedSet.add(k);
+          steps.push({
+            type: 'array',
+            arr: [...a],
+            highlights: getSortedMap(),
+            pointers: {},
+            pass: pass,
+            desc: '⚡ DỪNG SỚM (TỐI ƯU): Trong suốt lượt về không xảy ra hoán đổi nào. Mảng ĐÃ CÓ THỨ TỰ HOÀN CHỈNH!',
+            codeLines: [32],
+            vars: { 'Dừng sớm': 'CÓ (swapped = false)', 'Trạng thái': 'Đã sắp xếp 100%' }
+          });
+          break;
+        }
+      }
+
+      for (let k = 0; k < n; k++) sortedSet.add(k);
+      steps.push({
+        type: 'array',
+        arr: [...a],
+        highlights: getSortedMap(),
+        pointers: {},
+        pass: pass,
+        desc: '🎉 Hoàn thành Shaker Sort (Cocktail Sort)! Thuật toán lắc 2 chiều đã đưa mảng về thứ tự tăng dần hoàn chỉnh: [' + a.join(', ') + '].',
+        codeLines: [34],
+        vars: { 'Trạng thái': 'Hoàn tất 100%', 'Mảng đã sắp': a.join(', '), 'Tổng số Pass': pass }
+      });
+
+      return steps;
+    }
+
     function generateSelectionSortSteps(origArr) {
       const a = [...origArr];
       const n = a.length;
@@ -2485,6 +2943,44 @@
         pointers: {}, pass: n - 1, desc: '🎉 Hoàn thành Interchange Sort!', codeLine: 9,
         vars: { 'Trạng thái': 'Hoàn tất 100%' }
       });
+      return steps;
+    }
+
+    function generateShellSortSteps(origArr) {
+      const a = [...origArr];
+      const steps = [];
+      let pass = 0;
+      const add = (desc, codeLines, vars = {}, highlights = {}, pointers = {}) => {
+        steps.push({ type: 'array', arr: [...a], desc, codeLines, vars,
+          highlights, pointers, pass });
+      };
+      add('Shell Sort chèn các phần tử cách nhau gap vị trí. Dãy gap chia đôi: floor(N/2), ..., 1. Chỉ khi xong gap = 1, toàn mảng mới được bảo đảm tăng dần.', [4, 5], { N: a.length });
+      for (let gap = Math.floor(a.length / 2); gap > 0; gap = Math.floor(gap / 2)) {
+        pass++;
+        add('Lượt ' + pass + ': gap = ' + gap + '. Các chỉ số có cùng số dư khi chia cho gap thuộc cùng một nhóm.', [5], { gap, 'Lượt': pass });
+        for (let i = gap; i < a.length; i++) {
+          const key = a[i];
+          let j = i;
+          const group = {};
+          for (let k = i % gap; k < a.length; k += gap) group[k] = 'comparing';
+          const vars = () => ({ gap, i, j, key, 'Nhóm (index % gap)': i % gap });
+          add('Giữ key = A[' + i + '] = ' + key + '. Các cột vàng thuộc nhóm đang chèn; key được giữ riêng trong biến.', [6, 7, 8], vars(), { ...group, [i]: 'pivot' }, { [i]: 'key' });
+          while (j >= gap) {
+            const prev = j - gap;
+            const move = a[prev] > key;
+            add('So sánh A[' + prev + '] = ' + a[prev] + ' với key = ' + key + (move ? ': lớn hơn, cần dịch sang phải gap vị trí.' : ': không lớn hơn, dừng dịch.'), [9], vars(), { ...group, [prev]: 'comparing', [j]: 'pivot' }, { [prev]: 'j-gap', [j]: 'j' });
+            if (!move) break;
+            a[j] = a[prev];
+            add('Dịch A[' + prev + '] sang A[' + j + ']. Giá trị key = ' + key + ' vẫn được giữ riêng để chèn sau.', [10], vars(), { ...group, [j]: 'swapping' }, { [prev]: 'Nguồn', [j]: 'Đích' });
+            j -= gap;
+            add('Lùi j thêm gap: j = ' + j + (j < gap ? '. Đã đến đầu nhóm.' : '.'), [11, 9], vars(), group, { [j]: 'j' });
+          }
+          a[j] = key;
+          add('Chèn key = ' + key + ' vào A[' + j + ']. Phần đã xét của nhóm hiện tại đã tăng dần.', [13], vars(), { ...group, [j]: 'pivot' }, { [j]: 'Chèn key' });
+        }
+        add('Hoàn tất gap = ' + gap + (gap > 1 ? '. Mỗi nhóm đã tăng dần; tiếp tục giảm gap xuống ' + Math.floor(gap / 2) + '.' : '. Toàn bộ mảng đã tăng dần.'), [5], { gap, 'gap tiếp theo': Math.floor(gap / 2) });
+      }
+      add('Hoàn thành Shell Sort. Mảng đã được sắp xếp tăng dần.', [16], { 'Trạng thái': 'Hoàn tất', gap: 0 }, Object.fromEntries(a.map((_, i) => [i, 'sorted'])));
       return steps;
     }
 
@@ -2934,6 +3430,187 @@
         desc: '🎉 Hoàn thành Quick Sort! Mọi đoạn phân hoạch đã hoàn tất, mảng đã có thứ tự tăng dần hoàn chỉnh: [' + a.join(', ') + '].',
         codeLine: 18,
         vars: { 'Trạng thái': 'Hoàn tất 100%', 'Mảng đã sắp': a.join(', ') }
+      });
+
+      return steps;
+    }
+
+    /* ==========================================================================
+       SPECIAL 3.2: QUICK SORT (HOARE PARTITION - TWO OPPOSING POINTERS)
+       ========================================================================== */
+    function generateQuickSortHoareSteps(origArr) {
+      const a = (origArr && origArr.length > 0) ? [...origArr] : [45, 10, 80, 30, 90, 40, 50, 70];
+      const steps = [];
+      let pass = 0;
+      const sortedSet = new Set();
+
+      steps.push({
+        type: 'quick_hoare_special',
+        arr: [...a],
+        low: 0, high: a.length - 1,
+        pivotVal: a[0], pivotIdx: 0,
+        i: -1, j: a.length,
+        activePointer: null,
+        scanningIdx: -1,
+        swappingPair: [],
+        sortedIndices: [],
+        partitionIdx: -1,
+        isPartitionDone: false,
+        pass: 0,
+        desc: 'Bắt đầu Quick Sort với Phân Hoạch Hoare (Hoare Partition Scheme). Chốt Pivot chọn tại đầu mảng A[0] = ' + a[0] + '. Hai con trỏ i (→) và j (←) đối đầu từ 2 biên vào giữa, hoán đổi khi phát hiện nghịch thế. Số phép hoán đổi ít hơn ~3 lần so với Lomuto!',
+        codeLines: [18, 19, 20, 21],
+        vars: { 'Phạm vi': '[0..' + (a.length - 1) + ']', 'Pivot A[0]': a[0], 'Số phần tử': a.length, 'Phân hoạch': 'Hoare 2 con trỏ' }
+      });
+
+      function partitionHoare(low, high) {
+        pass++;
+        const pivot = a[low];
+        let i = low - 1;
+        let j = high + 1;
+
+        steps.push({
+          type: 'quick_hoare_special',
+          arr: [...a],
+          low: low, high: high,
+          pivotVal: pivot, pivotIdx: low,
+          i: i, j: j,
+          activePointer: null,
+          scanningIdx: -1,
+          swappingPair: [],
+          sortedIndices: Array.from(sortedSet),
+          partitionIdx: -1,
+          isPartitionDone: false,
+          pass: pass,
+          desc: '--- PASS ' + pass + ': Phân hoạch đoạn [' + low + '..' + high + ']. CHỌN PIVOT = A[' + low + '] = ' + pivot + '. Khởi tạo con trỏ trái i = ' + i + ' (low - 1), con trỏ phải j = ' + j + ' (high + 1).',
+          codeLines: [4, 5, 6, 7],
+          vars: { 'Đoạn phân hoạch': '[' + low + '..' + high + ']', 'PIVOT A[low]': pivot, 'Con trỏ trái i': i, 'Con trỏ phải j': j }
+        });
+
+        while (true) {
+          // Con trỏ i tiến sang phải tìm a[i] >= pivot
+          do {
+            i++;
+            const isLess = a[i] < pivot;
+            steps.push({
+              type: 'quick_hoare_special',
+              arr: [...a],
+              low: low, high: high,
+              pivotVal: pivot, pivotIdx: low,
+              i: i, j: j,
+              activePointer: 'i',
+              scanningIdx: i,
+              swappingPair: [],
+              sortedIndices: Array.from(sortedSet),
+              partitionIdx: -1,
+              isPartitionDone: false,
+              pass: pass,
+              desc: 'Con trỏ trái i tăng lên ' + i + ' (A[' + i + '] = ' + a[i] + '): ' +
+                (isLess ? 'A[' + i + '] < PIVOT (' + pivot + ') -> Thỏa điều kiện nửa trái, tiếp tục tăng i sang phải.'
+                        : 'A[' + i + '] ≥ PIVOT (' + pivot + ') -> DỪNG LẠI tại i = ' + i + '! Phần tử này cần đưa sang nửa phải hoặc là điểm dừng.'),
+              codeLines: [9],
+              vars: { 'Con trỏ trái i': i, 'A[i]': a[i], 'PIVOT': pivot, 'Trạng thái i': isLess ? '< PIVOT (Tiếp tục)' : '≥ PIVOT (DỪNG)' }
+            });
+          } while (a[i] < pivot);
+
+          // Con trỏ j lùi sang trái tìm a[j] <= pivot
+          do {
+            j--;
+            const isGreater = a[j] > pivot;
+            steps.push({
+              type: 'quick_hoare_special',
+              arr: [...a],
+              low: low, high: high,
+              pivotVal: pivot, pivotIdx: low,
+              i: i, j: j,
+              activePointer: 'j',
+              scanningIdx: j,
+              swappingPair: [],
+              sortedIndices: Array.from(sortedSet),
+              partitionIdx: -1,
+              isPartitionDone: false,
+              pass: pass,
+              desc: 'Con trỏ phải j giảm xuống ' + j + ' (A[' + j + '] = ' + a[j] + '): ' +
+                (isGreater ? 'A[' + j + '] > PIVOT (' + pivot + ') -> Thỏa điều kiện nửa phải, tiếp tục giảm j sang trái.'
+                           : 'A[' + j + '] ≤ PIVOT (' + pivot + ') -> DỪNG LẠI tại j = ' + j + '! Phần tử này cần đưa sang nửa trái hoặc là điểm dừng.'),
+              codeLines: [10],
+              vars: { 'Con trỏ phải j': j, 'A[j]': a[j], 'PIVOT': pivot, 'Trạng thái j': isGreater ? '> PIVOT (Tiếp tục)' : '≤ PIVOT (DỪNG)' }
+            });
+          } while (a[j] > pivot);
+
+          // Kiểm tra va chạm (i >= j)
+          if (i >= j) {
+            steps.push({
+              type: 'quick_hoare_special',
+              arr: [...a],
+              low: low, high: high,
+              pivotVal: pivot, pivotIdx: low,
+              i: i, j: j,
+              activePointer: null,
+              scanningIdx: -1,
+              swappingPair: [],
+              sortedIndices: Array.from(sortedSet),
+              partitionIdx: j,
+              isPartitionDone: true,
+              pass: pass,
+              desc: '🛑 HAI CON TRỎ VA CHẠM (i = ' + i + ' >= j = ' + j + ')! Kết thúc phân hoạch tại điểm cắt j = ' + j + '. ' +
+                'Mảng phân thành 2 nửa: Nửa trái [' + low + '..' + j + '] và Nửa phải [' + (j + 1) + '..' + high + ']. (Lưu ý: Pivot không nhất thiết nằm cố định tại j).',
+              codeLines: [11],
+              vars: { 'Điểm phân cắt j': j, 'Nửa trái': '[' + low + '..' + j + ']', 'Nửa phải': '[' + (j + 1) + '..' + high + ']', 'Quy tắc': 'Đệ quy [low..j] & [j+1..high]' }
+            });
+            return j;
+          }
+
+          // Hoán đổi cặp nghịch thế A[i] và A[j]
+          const temp = a[i]; a[i] = a[j]; a[j] = temp;
+          steps.push({
+            type: 'quick_hoare_special',
+            arr: [...a],
+            low: low, high: high,
+            pivotVal: pivot, pivotIdx: low,
+            i: i, j: j,
+            activePointer: null,
+            scanningIdx: -1,
+            swappingPair: [i, j],
+            sortedIndices: Array.from(sortedSet),
+            partitionIdx: -1,
+            isPartitionDone: false,
+            pass: pass,
+            desc: '⚡ HOÁN ĐỔI NGHỊCH THẾ: Do i (' + i + ') < j (' + j + '), hoán đổi A[' + i + '] (' + a[j] + ') ⇄ A[' + j + '] (' + a[i] + '). ' +
+              'Đưa giá trị nhỏ (' + a[i] + ') về nửa trái và giá trị lớn (' + a[j] + ') về nửa phải!',
+            codeLines: [12],
+            vars: { 'Hoán đổi': 'A[' + i + '] ⇄ A[' + j + ']', 'Giá trị sau đổi': 'A[' + i + ']=' + a[i] + ', A[' + j + ']=' + a[j], 'PIVOT': pivot }
+          });
+        }
+      }
+
+      function quickSortHoareHelper(low, high) {
+        if (low < high) {
+          const pi = partitionHoare(low, high);
+          quickSortHoareHelper(low, pi);
+          quickSortHoareHelper(pi + 1, high);
+        } else if (low === high) {
+          sortedSet.add(low);
+        }
+      }
+
+      quickSortHoareHelper(0, a.length - 1);
+
+      steps.push({
+        type: 'quick_hoare_special',
+        arr: [...a],
+        low: 0, high: a.length - 1,
+        pivotVal: null, pivotIdx: -1,
+        i: -1, j: -1,
+        activePointer: null,
+        scanningIdx: -1,
+        swappingPair: [],
+        sortedIndices: a.map((_, idx) => idx),
+        partitionIdx: -1,
+        isPartitionDone: false,
+        pass: pass,
+        desc: '🎉 Hoàn thành Quick Sort (Phân hoạch Hoare)! Tất cả các đoạn đã được chia và đệ quy sắp xếp hoàn tất. Mảng tăng dần hoàn chỉnh: [' + a.join(', ') + '].',
+        codeLines: [18, 19, 20, 21],
+        vars: { 'Trạng thái': 'Hoàn tất 100%', 'Mảng đã sắp': a.join(', '), 'Tổng số Pass': pass }
       });
 
       return steps;
@@ -3539,6 +4216,8 @@
         renderHeapSortSpecial(step);
       } else if (step.type === 'quick_special') {
         renderQuickSortSpecial(step);
+      } else if (step.type === 'quick_hoare_special') {
+        renderQuickSortHoareSpecial(step);
       } else if (step.type === 'radix_special') {
         renderRadixSortSpecial(step);
       } else if (step.type === 'array') {
@@ -3807,15 +4486,44 @@
       DOM.stageCanvas.appendChild(container);
     }
 
-    /* SPECIAL RENDERER 3: QUICK SORT 3-ZONE LOMUTO & FLOATING PIVOT */
+    /* SPECIAL RENDERER 3.1: QUICK SORT LOMUTO PARTITION & PIVOT */
     function renderQuickSortSpecial(step) {
       const container = document.createElement('div');
       container.className = 'quick-special-container';
 
+      // Scheme Switcher Bar
+      const schemeBar = document.createElement('div');
+      schemeBar.className = 'quick-scheme-bar';
+      schemeBar.innerHTML = 
+        '<button class="quick-scheme-btn active lomuto" title="Phân hoạch Lomuto: Chốt cuối a[high], duyệt 1 hướng">' +
+          '<span>📌 Phân Hoạch Lomuto (Chốt Cuối)</span>' +
+        '</button>' +
+        '<button class="quick-scheme-btn" id="btnSwitchToHoare" title="Chuyển sang phân hoạch Hoare: Chốt đầu a[low], 2 con trỏ đối đầu">' +
+          '<span>⚡ Chuyển Sang Hoare (2 Con Trỏ)</span>' +
+        '</button>';
+      container.appendChild(schemeBar);
+
+      const btnToHoare = schemeBar.querySelector('#btnSwitchToHoare');
+      if (btnToHoare) {
+        btnToHoare.addEventListener('click', () => {
+          const sel = document.getElementById('algoDropdown');
+          if (sel) sel.value = 'quick_sort_hoare';
+          initAlgorithm('quick_sort_hoare');
+        });
+      }
+
+      // Comparison info banner
+      const infoBanner = document.createElement('div');
+      infoBanner.className = 'quick-hoare-info-banner';
+      infoBanner.innerHTML = 
+        '<span>📌 <strong>Đặc trưng Lomuto:</strong> Pivot chọn tại <code>A[high]</code>. Duyệt 1 hướng từ trái qua phải. Sau mỗi pass, Pivot được <strong>chốt cố định vị trí</strong> cuối cùng.</span>' +
+        '<span style="background:rgba(192,132,252,0.2); color:#c084fc; padding:2px 8px; border-radius:4px; font-weight:700;">Lomuto Scheme</span>';
+      container.appendChild(infoBanner);
+
       if (step.pivotVal !== null && step.pivotIdx >= 0) {
         const pivotCard = document.createElement('div');
         pivotCard.className = 'quick-pivot-card';
-        pivotCard.innerHTML = '<span>🎯 CHỐT CHẶN PIVOT:</span><span style="background:#fff; color:#7e22ce; padding:3px 12px; border-radius:6px; font-weight:900;">' + step.pivotVal + '</span><span style="font-size:0.8rem; opacity:0.9;">(Tại chỉ số high = ' + step.high + ')</span>';
+        pivotCard.innerHTML = '<span>🎯 CHỐT CHẶN PIVOT (LOMUTO):</span><span style="background:#fff; color:#7e22ce; padding:3px 12px; border-radius:6px; font-weight:900;">' + step.pivotVal + '</span><span style="font-size:0.8rem; opacity:0.9;">(Tại chỉ số high = ' + step.high + ')</span>';
         container.appendChild(pivotCard);
       }
 
@@ -3824,7 +4532,7 @@
 
       const legends = document.createElement('div');
       legends.className = 'quick-zone-legends';
-      legends.innerHTML = '<span style="color:#38bdf8;">■ Vùng &lt; Pivot [low..' + step.i + ']</span><span style="color:#f59e0b;">■ Vùng ≥ Pivot [' + (step.i + 1) + '..' + Math.max(step.i, step.j - 1) + ']</span><span style="color:#94a3b8;">■ Vùng Chưa Xét [' + step.j + '..' + (step.high - 1) + ']</span><span style="color:#c084fc;">■ Pivot [' + step.high + ']</span>';
+      legends.innerHTML = '<span style="color:#38bdf8;">■ Vùng &lt; Pivot [low..' + step.i + ']</span><span style="color:#f59e0b;">■ Vùng ≥ Pivot [' + (step.i + 1) + '..' + Math.max(step.i, step.j - 1) + ']</span><span style="color:#94a3b8;">■ Vùng Chưa Xét [' + step.j + '..' + (step.high - 1) + ']</span><span style="color:#c084fc;">■ Pivot [' + step.high + ']</span><span style="color:#34d399;">■ Đã cố định</span>';
       wrapper.appendChild(legends);
 
       const slotsRow = document.createElement('div');
@@ -3837,8 +4545,10 @@
         const isSorted = step.sortedIndices && step.sortedIndices.includes(idx);
         const isPivot = idx === step.pivotIdx;
         const isScanning = idx === step.scanningIdx;
+        const isSwapping = step.swappingPair && step.swappingPair.includes(idx);
 
         if (isSorted) slot.classList.add('zone-sorted');
+        else if (isSwapping) slot.classList.add('zone-swapping');
         else if (isPivot) slot.classList.add('zone-pivot');
         else if (idx >= step.low && idx <= step.i) slot.classList.add('zone-less');
         else if (idx > step.i && idx < step.j) slot.classList.add('zone-greater');
@@ -3866,6 +4576,139 @@
           pJ.style.bottom = '-38px';
           pJ.textContent = 'Quét j';
           slot.appendChild(pJ);
+        }
+
+        slotsRow.appendChild(slot);
+      });
+
+      wrapper.appendChild(slotsRow);
+      container.appendChild(wrapper);
+      DOM.stageCanvas.appendChild(container);
+    }
+
+    /* SPECIAL RENDERER 3.2: QUICK SORT HOARE PARTITION (TWO POINTERS) */
+    function renderQuickSortHoareSpecial(step) {
+      const container = document.createElement('div');
+      container.className = 'quick-special-container';
+
+      // Scheme Switcher Bar
+      const schemeBar = document.createElement('div');
+      schemeBar.className = 'quick-scheme-bar';
+      schemeBar.innerHTML = 
+        '<button class="quick-scheme-btn" id="btnSwitchToLomuto" title="Chuyển sang phân hoạch Lomuto: Chốt cuối a[high], duyệt 1 hướng">' +
+          '<span>📌 Chuyển Sang Lomuto (Chốt Cuối)</span>' +
+        '</button>' +
+        '<button class="quick-scheme-btn active" title="Phân hoạch Hoare: Chốt đầu a[low], 2 con trỏ đối đầu">' +
+          '<span>⚡ Phân Hoạch Hoare (2 Con Trỏ)</span>' +
+        '</button>';
+      container.appendChild(schemeBar);
+
+      const btnToLomuto = schemeBar.querySelector('#btnSwitchToLomuto');
+      if (btnToLomuto) {
+        btnToLomuto.addEventListener('click', () => {
+          const sel = document.getElementById('algoDropdown');
+          if (sel) sel.value = 'quick_sort_lomuto';
+          initAlgorithm('quick_sort_lomuto');
+        });
+      }
+
+      // Comparison info banner
+      const infoBanner = document.createElement('div');
+      infoBanner.className = 'quick-hoare-info-banner';
+      infoBanner.innerHTML = 
+        '<span>⚡ <strong>Đặc trưng Hoare:</strong> Pivot chọn tại <code>A[low]</code>. Con trỏ <code>i →</code> (dò ≥ Pivot) và <code>← j</code> (dò ≤ Pivot) đối đầu nhau. Hoán đổi ít hơn ~3 lần Lomuto. Chia đôi tại <code>j</code>.</span>' +
+        '<span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-weight:700;">Hoare Scheme</span>';
+      container.appendChild(infoBanner);
+
+      if (step.pivotVal !== null && step.pivotIdx >= 0) {
+        const pivotCard = document.createElement('div');
+        pivotCard.className = 'quick-pivot-card';
+        pivotCard.style.background = 'linear-gradient(135deg, #0284c7, #2563eb)';
+        pivotCard.innerHTML = '<span>🎯 CHỐT CHẶN PIVOT (HOARE):</span><span style="background:#fff; color:#1d4ed8; padding:3px 12px; border-radius:6px; font-weight:900;">' + step.pivotVal + '</span><span style="font-size:0.8rem; opacity:0.9;">(Tại chỉ số đầu low = ' + step.low + ')</span>';
+        container.appendChild(pivotCard);
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'quick-zones-wrapper';
+
+      const legends = document.createElement('div');
+      legends.className = 'quick-zone-legends';
+      legends.innerHTML = 
+        '<span style="color:#38bdf8;">■ Con trỏ i (Dò ≥ Pivot)</span>' +
+        '<span style="color:#f59e0b;">■ Con trỏ j (Dò ≤ Pivot)</span>' +
+        '<span style="color:#f43f5e;">■ Hoán đổi cặp nghịch thế [i, j]</span>' +
+        '<span style="color:#06b6d4;">■ Nửa trái [low..j]</span>' +
+        '<span style="color:#a855f7;">■ Nửa phải [j+1..high]</span>' +
+        '<span style="color:#34d399;">■ Đã hoàn tất</span>';
+      wrapper.appendChild(legends);
+
+      const slotsRow = document.createElement('div');
+      slotsRow.className = 'quick-slots-row';
+
+      step.arr.forEach((val, idx) => {
+        // If partition is done and we are at j+1, insert visual split divider
+        if (step.isPartitionDone && idx === step.partitionIdx + 1 && step.partitionIdx >= step.low && step.partitionIdx < step.high) {
+          const divider = document.createElement('div');
+          divider.className = 'hoare-split-divider';
+          divider.innerHTML = '<span style="font-size:0.65rem;">✂ CẮT</span><div class="hoare-split-line"></div><span style="font-size:0.65rem;">j=' + step.partitionIdx + '</span>';
+          slotsRow.appendChild(divider);
+        }
+
+        const slot = document.createElement('div');
+        slot.className = 'quick-slot';
+
+        const isSorted = step.sortedIndices && step.sortedIndices.includes(idx);
+        const isSwapping = step.swappingPair && step.swappingPair.includes(idx);
+        const isPivot = (idx === step.pivotIdx && !step.isPartitionDone);
+        const inActiveRange = (idx >= step.low && idx <= step.high);
+
+        if (isSorted) {
+          slot.classList.add('zone-sorted');
+        } else if (isSwapping) {
+          slot.classList.add('zone-swapping');
+        } else if (step.isPartitionDone && inActiveRange) {
+          if (idx <= step.partitionIdx) slot.classList.add('zone-hoare-left');
+          else slot.classList.add('zone-hoare-right');
+        } else if (inActiveRange) {
+          if (idx === step.i) slot.classList.add('zone-hoare-i');
+          if (idx === step.j) slot.classList.add('zone-hoare-j');
+          if (isPivot) slot.classList.add('zone-pivot');
+        } else {
+          slot.style.opacity = '0.35';
+        }
+
+        if (idx === step.scanningIdx) {
+          slot.classList.add('scanning');
+        }
+
+        slot.innerHTML = '<span>' + val + '</span><span style="font-size:0.7rem; opacity:0.7;">[' + idx + ']</span>';
+
+        // Pointer tags
+        if (idx === step.i && idx === step.j && inActiveRange) {
+          const pBoth = document.createElement('div');
+          pBoth.className = 'quick-pointer-tag';
+          pBoth.style.background = '#facc15';
+          pBoth.style.color = '#000';
+          pBoth.textContent = 'i = j (Gặp nhau)';
+          slot.appendChild(pBoth);
+        } else {
+          if (idx === step.i && inActiveRange) {
+            const pI = document.createElement('div');
+            pI.className = 'quick-pointer-tag';
+            pI.style.background = '#38bdf8';
+            pI.style.color = '#000';
+            pI.textContent = 'Trái i →';
+            slot.appendChild(pI);
+          }
+          if (idx === step.j && inActiveRange) {
+            const pJ = document.createElement('div');
+            pJ.className = 'quick-pointer-tag';
+            pJ.style.background = '#f59e0b';
+            pJ.style.color = '#000';
+            pJ.style.bottom = '-38px';
+            pJ.textContent = '← Phải j';
+            slot.appendChild(pJ);
+          }
         }
 
         slotsRow.appendChild(slot);
@@ -5257,8 +6100,15 @@
       }
     };
 function initAlgorithm(algoKey) {
+      if (algoKey === 'bubble_sort') algoKey = 'bubble_sort_optimized';
+      if (algoKey === 'quick_sort') algoKey = 'quick_sort_lomuto';
       State.currentAlgo = algoKey;
       const meta = AlgoMeta[algoKey];
+
+      const algoDropdown = document.getElementById('algoDropdown');
+      if (algoDropdown && algoDropdown.value !== algoKey) {
+        algoDropdown.value = algoKey;
+      }
 
       DOM.compBest.textContent = meta.best;
       DOM.compAvg.textContent = meta.avg;
@@ -5319,14 +6169,16 @@ function initAlgorithm(algoKey) {
         else State.steps = generateBinarySearchSteps(State.data, State.targetVal);
       }
       else if (meta.category === 'sort') {
-        if (algo === 'bubble_sort') State.steps = generateBubbleSortSteps(State.data, false);
-        else if (algo === 'bubble_sort_optimized') State.steps = generateBubbleSortSteps(State.data, true);
+        if (algo === 'bubble_sort_optimized' || algo === 'bubble_sort') State.steps = generateBubbleSortSteps(State.data, true);
+        else if (algo === 'shaker_sort') State.steps = generateShakerSortSteps(State.data);
         else if (algo === 'selection_sort') State.steps = generateSelectionSortSteps(State.data);
         else if (algo === 'interchange_sort') State.steps = generateInterchangeSortSteps(State.data);
         else if (algo === 'insertion_sort') State.steps = generateInsertionSortSteps(State.data);
+        else if (algo === 'shell_sort') State.steps = generateShellSortSteps(State.data);
         else if (algo === 'merge_sort') State.steps = generateMergeSortSpecialSteps(State.data);
         else if (algo === 'heap_sort') State.steps = generateHeapSortSpecialSteps(State.data);
-        else if (algo === 'quick_sort') State.steps = generateQuickSortSpecialSteps(State.data);
+        else if (algo === 'quick_sort' || algo === 'quick_sort_lomuto') State.steps = generateQuickSortSpecialSteps(State.data);
+        else if (algo === 'quick_sort_hoare') State.steps = generateQuickSortHoareSteps(State.data);
         else if (algo === 'radix_sort') State.steps = generateRadixSortSteps(State.data);
       }
       else if (meta.category === 'linkedlist') {
@@ -5602,7 +6454,7 @@ function initAlgorithm(algoKey) {
               <span class="clo-card-title">CLO 4: Cài đặt giải thuật Tìm kiếm & Sắp xếp</span>
               <span class="clo-tag">PI 5.3</span>
             </div>
-            <div class="clo-card-desc">Cài đặt 9 thuật toán sắp xếp (đặc biệt: Merge, Heap, Quick, Radix) và tìm kiếm C++.</div>
+            <div class="clo-card-desc">Cài đặt 11 thuật toán sắp xếp (đặc biệt: Shaker, Merge, Heap, Quick Lomuto & Hoare, Radix) và tìm kiếm C++.</div>
           </div>
           <div class="clo-card">
             <div class="clo-card-header">
